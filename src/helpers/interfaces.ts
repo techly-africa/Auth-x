@@ -7,5 +7,9 @@ interface IVendor extends Document {
   phone_number: number;
   password: string;
 }
+interface LVendor extends Document {
+  username: string;
+  password: string;
+}
 
-export { IVendor };
+export { IVendor, LVendor };

@@ -3,6 +3,7 @@ import { json, urlencoded } from "body-parser";
 import vendorRoutes from "./routes/vendorRoute";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
+import { Application } from "express-serve-static-core";
 
 dotenv.config();
 

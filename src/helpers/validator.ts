@@ -1,5 +1,5 @@
 import Joi from "joi";
-import { IVendor } from "./interfaces";
+import { IVendor, LVendor } from "./interfaces";
 
 const VendorRegisterSchema = Joi.object<IVendor>({
   username: Joi.string().required(),
@@ -11,4 +11,12 @@ const VendorRegisterSchema = Joi.object<IVendor>({
   phone_number: Joi.string().min(10).max(12).required(),
   email: Joi.string().email().required().lowercase(),
 });
-export { VendorRegisterSchema };
+
+const VendorLoginSchema = Joi.object<LVendor>({
+  username: Joi.string().required(),
+  password: Joi.string()
+    .min(8)
+    .required()
+    .pattern(new RegExp("^[a-zA-Z0-9]{3,30}$")),
+});
+export { VendorRegisterSchema, VendorLoginSchema };
