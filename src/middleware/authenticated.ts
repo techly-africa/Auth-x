@@ -20,7 +20,7 @@ const IsAuthenticated = async (
 
     next();
   } catch (error) {
-    return res.json({ msg: "Invalid Token" });
+    return res.status(400).json({ msg: "Invalid Token" });
   }
 };
 export default IsAuthenticated;

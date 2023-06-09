@@ -29,6 +29,8 @@ export const Login = async (
   res: express.Response
 ): Promise<any> => {
   try {
+    console.log(req.body);
+
     const result = await VendorLoginSchema.validateAsync(req.body);
 
     const doesExist = await Vendor.findOne({ username: result.username });
@@ -46,12 +48,13 @@ export const Login = async (
         );
         return res.status(200).json({ token: token });
       }
-      res.status(401).json({ msge: "unable to log in" });
+      return res.status(401).json({ msge: "unable to log in" });
     } else {
-      console.log(`${result.username} doesn't exists `);
+      return console.log(`${result.username} doesn't exists `);
     }
   } catch (error) {
     console.log(error);
+    return res.status(500).json({ msg: "server Error" });
   }
 };
 
@@ -62,7 +65,7 @@ export const AllVendor = async (
   try {
     const data = await Vendor.find({});
     console.log("found vendor ");
-    res.status(200).json(data);
+    return res.status(200).json(data);
   } catch (error) {
     console.log("can not fetch", error);
   }

@@ -3,7 +3,31 @@ import { AllVendor, Login, Register } from "../controllers/VendorController";
 import IsAuthenticated from "../middleware/authenticated";
 
 const router: Router = express.Router();
+/**
+ * @swagger
+ * tags:
+ *   name: Vendor
+ *   description: API endpoints to manage Vendor
+ */
 
+/**
+ * @swagger
+ * /api/vendor/register:
+ *   post:
+ *     summary: Register your Vendor Account
+ *     tags: [Vendor]
+ *     responses:
+ *       200:
+ *         description: Registration Success
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Vendor'
+ *       400:
+ *         $ref: '#/components/responses/400'
+ *       401:
+ *         $ref: '#/components/responses/401'
+ */
 router.post("/register", Register);
 router.get("/vendors", IsAuthenticated, AllVendor);
 router.get("/login", Login);
