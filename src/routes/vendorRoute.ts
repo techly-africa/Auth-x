@@ -1,5 +1,11 @@
 import express, { Router } from "express";
-import { AllVendor, Login, Register } from "../controllers/VendorController";
+import {
+  AllVendor,
+  Login,
+  Register,
+  Profile,
+  EditProfile,
+} from "../controllers/VendorController";
 import IsAuthenticated from "../middleware/authenticated";
 
 const router: Router = express.Router();
@@ -30,6 +36,8 @@ const router: Router = express.Router();
  */
 router.post("/register", Register);
 router.get("/vendors", IsAuthenticated, AllVendor);
-router.get("/login", Login);
+router.post("/login", Login);
+router.get("/profile", IsAuthenticated, Profile);
+router.put("/updateProfile", IsAuthenticated, EditProfile);
 
 export default router;

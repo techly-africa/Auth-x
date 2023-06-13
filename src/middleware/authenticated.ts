@@ -1,3 +1,4 @@
+import { log } from "console";
 import express from "express";
 import { IVendor } from "helpers/interfaces";
 import Jwt from "jsonwebtoken";
