@@ -1,6 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import mongoose from 'mongoose';
 
 describe('AppController', () => {
   let appController: AppController;
@@ -15,7 +16,7 @@ describe('AppController', () => {
   });
 
   describe('root', () => {
-    it('should return "Welcome to MPACASH APIs!"', () => {
+    it('should return "Welcome to MPACASH APIs!"', async () => {
       expect(appController.getHello()).toBe('Welcome to MPACASH APIs!');
     });
   });
