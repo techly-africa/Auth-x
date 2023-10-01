@@ -15,27 +15,38 @@ export class AuthService {
     ){}
 
 
-    async loginUser(user: LoginUserDto) : Promise<{token : string, message: string}> {
-        const {email, password} = user;
-        if(!email || !password) {
-            throw new BadRequestException("Please fill in all field");
+    async loginUser(user: LoginUserDto): Promise<{ token: string; message: string }> {
+        const { phone, email, password } = user;
+        if ((!phone && !email) || !password) {
+          throw new BadRequestException("Please provide either email or phone and password");
         }
-        const existUser = await this.userModel.findOne({email});
-        if(!existUser){
-            throw new BadRequestException("Invalid Credentials")
+      
+        let existUser;
+        if (email) {
+          existUser = await this.userModel.findOne({ email });
+        } else if (phone) {
+          existUser = await this.userModel.findOne({ phone });
         }
+      
+        if (!existUser) {
+          throw new BadRequestException("Invalid Credentials");
+        }
+      
         const passwordMatch = await bcrypt.compare(password, existUser.password);
-        if(!passwordMatch){
-            throw new BadRequestException("Invalid Credentials");
+        if (!passwordMatch) {
+          throw new BadRequestException("Invalid Credentials");
         }
+      
         const token = this.jwtServices.sign({
-            id: existUser._id,
-            name: existUser.name,
-            role: existUser.role
-        })
+          id: existUser._id,
+          name: existUser.name,
+          role: existUser.role,
+        });
+      
         return {
-            token: token,
-            message: `Welcome, ${existUser.name}! Your login was successful, and we're thrilled to have you join the MPACash community. Get ready to explore a world of convenient financial services at your fingertips.`
-        }
+          token: token,
+          message: `Welcome, ${existUser.name}! Your login was successful, and we're thrilled to have you join the MPACash community. Get ready to explore a world of convenient financial services at your fingertips.`,
+        };
       }
+      
 }
