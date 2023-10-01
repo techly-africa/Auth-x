@@ -37,7 +37,7 @@ exports.UserModule = UserModule = __decorate([
             mongoose_1.MongooseModule.forFeature([{ name: user_schema_1.User.name, schema: user_schema_1.userSchema }])
         ],
         controllers: [user_controller_1.UserController],
-        providers: [user_service_1.UserService, auth_guard_1.AuthGuard],
+        providers: [user_service_1.UserService, auth_guard_1.AdminGuard],
     })
 ], UserModule);
 //# sourceMappingURL=user.module.js.map

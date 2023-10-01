@@ -4,7 +4,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ObjectId } from 'mongoose';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import { AuthGuard } from 'src/auth/auth.guard';
+import { AdminGuard } from 'src/auth/auth.guard';
 
 @ApiTags('User Management')
 @Controller('users')
@@ -18,7 +18,7 @@ export class UserController {
   }
 
   @ApiOperation({summary: 'Get all users'})
-  @UseGuards(AuthGuard)
+  @UseGuards(AdminGuard)
   @Get()
   findAll() {
     return this.userService.findAll();
