@@ -19,7 +19,7 @@ export class AdminGuard implements CanActivate {
     }
     try {
       const payload = await this.jwtService.verifyAsync(token, {
-        secret: process.env.JWT_SECRET, // Retrieve JWT secret from environment variable
+        secret: process.env.JWT_SECRET,
       });
 
       if (payload.role !== 0) {

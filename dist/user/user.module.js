@@ -12,7 +12,7 @@ const user_service_1 = require("./user.service");
 const user_controller_1 = require("./user.controller");
 const mongoose_1 = require("@nestjs/mongoose");
 const user_schema_1 = require("./schemas/user.schema");
-const auth_guard_1 = require("../auth/auth.guard");
+const admin_guard_1 = require("../auth/Guards/admin.guard");
 const passport_1 = require("@nestjs/passport");
 const config_1 = require("@nestjs/config");
 const jwt_1 = require("@nestjs/jwt");
@@ -37,7 +37,7 @@ exports.UserModule = UserModule = __decorate([
             mongoose_1.MongooseModule.forFeature([{ name: user_schema_1.User.name, schema: user_schema_1.userSchema }])
         ],
         controllers: [user_controller_1.UserController],
-        providers: [user_service_1.UserService, auth_guard_1.AdminGuard],
+        providers: [user_service_1.UserService, admin_guard_1.AdminGuard],
     })
 ], UserModule);
 //# sourceMappingURL=user.module.js.map

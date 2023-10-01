@@ -3,7 +3,7 @@ import { UserService } from './user.service';
 import { UserController } from './user.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { User, userSchema } from './schemas/user.schema';
-import { AdminGuard } from 'src/auth/auth.guard';
+import { AdminGuard } from 'src/auth/Guards/admin.guard';
 import { PassportModule } from '@nestjs/passport';
 import { ConfigService } from '@nestjs/config';
 import { config } from 'process';
