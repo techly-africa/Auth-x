@@ -21,17 +21,18 @@
 /// <reference types="mongoose/types/utility" />
 /// <reference types="mongoose/types/validation" />
 /// <reference types="mongoose/types/virtuals" />
-/// <reference types="mongoose" />
 /// <reference types="mongoose/types/inferschematype" />
+import { ObjectId } from "mongoose";
 export declare class User {
+    _id: ObjectId;
     name: string;
     email: string;
     password: string;
     role: number;
     phone: string;
 }
-export declare const userSchema: import("mongoose").Schema<User, import("mongoose").Model<User, any, any, any, import("mongoose").Document<unknown, any, User> & User & {
-    _id: import("mongoose").Types.ObjectId;
-}, any>, {}, {}, {}, {}, import("mongoose").DefaultSchemaOptions, User, import("mongoose").Document<unknown, {}, User> & User & {
-    _id: import("mongoose").Types.ObjectId;
-}>;
+export declare const userSchema: import("mongoose").Schema<User, import("mongoose").Model<User, any, any, any, import("mongoose").Document<unknown, any, User> & User & Required<{
+    _id: import("mongoose").Schema.Types.ObjectId;
+}>, any>, {}, {}, {}, {}, import("mongoose").DefaultSchemaOptions, User, import("mongoose").Document<unknown, {}, User> & User & Required<{
+    _id: import("mongoose").Schema.Types.ObjectId;
+}>>;

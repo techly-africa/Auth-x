@@ -25,8 +25,8 @@ let UserController = class UserController {
     create(createUserDto) {
         return this.userService.create(createUserDto);
     }
-    findAll(req) {
-        return this.userService.findAll(req);
+    findAll() {
+        return this.userService.findAll();
     }
     findOne(id) {
         return this.userService.findOne(id);
@@ -50,9 +50,8 @@ __decorate([
 __decorate([
     (0, swagger_1.ApiOperation)({ summary: 'Get all users' }),
     (0, common_1.Get)(),
-    __param(0, (0, common_1.Req)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
+    __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
 ], UserController.prototype, "findAll", null);
 __decorate([
@@ -82,7 +81,7 @@ __decorate([
 ], UserController.prototype, "remove", null);
 exports.UserController = UserController = __decorate([
     (0, swagger_1.ApiTags)('User Management'),
-    (0, common_1.Controller)('user'),
+    (0, common_1.Controller)('users'),
     __metadata("design:paramtypes", [user_service_1.UserService])
 ], UserController);
 //# sourceMappingURL=user.controller.js.map
