@@ -1,9 +1,10 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Req } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Req, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ObjectId } from 'mongoose';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { AuthGuard } from 'src/auth/auth.guard';
 
 @ApiTags('User Management')
 @Controller('users')
@@ -17,6 +18,7 @@ export class UserController {
   }
 
   @ApiOperation({summary: 'Get all users'})
+  @UseGuards(AuthGuard)
   @Get()
   findAll() {
     return this.userService.findAll();
@@ -36,6 +38,7 @@ export class UserController {
 
   @ApiOperation({summary: 'Delete a specific user'})
   @Delete(':id')
+
   remove(@Param('id') id: string) {
     return this.userService.remove(id);
   }
