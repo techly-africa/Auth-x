@@ -1,5 +1,5 @@
 <a href="https://codeclimate.com/github/techly-africa/mpa-cash-backend/maintainability"><img src="https://api.codeclimate.com/v1/badges/1f6c2024dcbec25991dc/maintainability" /></a>
-<a href='https://coveralls.io/github/techly-africa/mpa-cash-backend?branch=ch-setup-tests'><img src='https://coveralls.io/repos/github/techly-africa/mpa-cash-backend/badge.svg?branch=ch-setup-tests' alt='Coverage Status' /></a>
+<a href='https://coveralls.io/github/techly-africa/mpa-cash-backend?branch=main'><img src='https://coveralls.io/repos/github/techly-africa/mpa-cash-backend/badge.svg?branch=main' alt='Coverage Status' /></a>
 <p align="center">
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
 </p>

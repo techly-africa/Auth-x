@@ -18,6 +18,7 @@ const user_service_1 = require("./user.service");
 const create_user_dto_1 = require("./dto/create-user.dto");
 const update_user_dto_1 = require("./dto/update-user.dto");
 const swagger_1 = require("@nestjs/swagger");
+const admin_guard_1 = require("../auth/Guards/admin.guard");
 let UserController = class UserController {
     constructor(userService) {
         this.userService = userService;
@@ -25,8 +26,8 @@ let UserController = class UserController {
     create(createUserDto) {
         return this.userService.create(createUserDto);
     }
-    findAll(req) {
-        return this.userService.findAll(req);
+    findAll() {
+        return this.userService.findAll();
     }
     findOne(id) {
         return this.userService.findOne(id);
@@ -49,14 +50,15 @@ __decorate([
 ], UserController.prototype, "create", null);
 __decorate([
     (0, swagger_1.ApiOperation)({ summary: 'Get all users' }),
+    (0, common_1.UseGuards)(admin_guard_1.AdminGuard),
     (0, common_1.Get)(),
-    __param(0, (0, common_1.Req)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
+    __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
 ], UserController.prototype, "findAll", null);
 __decorate([
     (0, swagger_1.ApiOperation)({ summary: 'Get a specific user' }),
+    (0, common_1.UseGuards)(admin_guard_1.AdminGuard),
     (0, common_1.Get)(':id'),
     __param(0, (0, common_1.Param)('id')),
     __metadata("design:type", Function),
@@ -74,6 +76,7 @@ __decorate([
 ], UserController.prototype, "update", null);
 __decorate([
     (0, swagger_1.ApiOperation)({ summary: 'Delete a specific user' }),
+    (0, common_1.UseGuards)(admin_guard_1.AdminGuard),
     (0, common_1.Delete)(':id'),
     __param(0, (0, common_1.Param)('id')),
     __metadata("design:type", Function),
@@ -82,7 +85,7 @@ __decorate([
 ], UserController.prototype, "remove", null);
 exports.UserController = UserController = __decorate([
     (0, swagger_1.ApiTags)('User Management'),
-    (0, common_1.Controller)('user'),
+    (0, common_1.Controller)('users'),
     __metadata("design:paramtypes", [user_service_1.UserService])
 ], UserController);
 //# sourceMappingURL=user.controller.js.map

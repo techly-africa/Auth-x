@@ -18,10 +18,8 @@ const mongoose_1 = require("@nestjs/mongoose");
 const user_schema_1 = require("./schemas/user.schema");
 const mongoose_2 = require("mongoose");
 const bcrypt = require("bcrypt");
-const config_1 = require("@nestjs/config");
 let UserService = class UserService {
-    constructor(configService, userModel) {
-        this.configService = configService;
+    constructor(userModel) {
         this.userModel = userModel;
     }
     async create(createUserDto) {
@@ -35,12 +33,12 @@ let UserService = class UserService {
         }
         catch (error) {
             if (error.message.includes('E11000 duplicate key error')) {
-                throw new common_1.BadRequestException('User with that email already exist.');
+                return Promise.reject(new common_1.BadRequestException('User with that email already exist.'));
             }
-            throw new common_1.InternalServerErrorException();
+            return Promise.reject(new common_1.InternalServerErrorException());
         }
     }
-    async findAll(req) {
+    async findAll() {
         try {
             const users = await this.userModel.find();
             return users;
@@ -97,8 +95,7 @@ let UserService = class UserService {
 exports.UserService = UserService;
 exports.UserService = UserService = __decorate([
     (0, common_1.Injectable)(),
-    __param(1, (0, mongoose_1.InjectModel)(user_schema_1.User.name)),
-    __metadata("design:paramtypes", [config_1.ConfigService,
-        mongoose_2.Model])
+    __param(0, (0, mongoose_1.InjectModel)(user_schema_1.User.name)),
+    __metadata("design:paramtypes", [mongoose_2.Model])
 ], UserService);
 //# sourceMappingURL=user.service.js.map
