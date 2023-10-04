@@ -30,6 +30,9 @@ export declare class User {
     password: string;
     role: number;
     phone: string;
+    gender: string;
+    isVerified: boolean;
+    verificationToken: string;
 }
 export declare const userSchema: import("mongoose").Schema<User, import("mongoose").Model<User, any, any, any, import("mongoose").Document<unknown, any, User> & User & Required<{
     _id: import("mongoose").Schema.Types.ObjectId;

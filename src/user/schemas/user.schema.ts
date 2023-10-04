@@ -28,6 +28,15 @@ export class User {
 
     @Prop()
     phone: string
+
+    @Prop()
+    gender: string
+
+    @Prop()
+    isVerified: boolean
+
+    @Prop()
+    verificationToken: string
 }
 
 export const userSchema = SchemaFactory.createForClass(User)

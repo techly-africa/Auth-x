@@ -18,18 +18,31 @@ const mongoose_1 = require("@nestjs/mongoose");
 const user_schema_1 = require("./schemas/user.schema");
 const mongoose_2 = require("mongoose");
 const bcrypt = require("bcrypt");
+const uuid_1 = require("uuid");
+const mail_service_1 = require("../mail/mail.service");
 let UserService = class UserService {
-    constructor(userModel) {
+    constructor(userModel, mailerServices) {
         this.userModel = userModel;
+        this.mailerServices = mailerServices;
     }
     async create(createUserDto) {
+        const { name, email, password, gender } = createUserDto;
+        if (!name || !email || !password || !gender) {
+            throw new common_1.BadRequestException('Invalid Inputs!');
+        }
         try {
             const salt = 10;
             const hash = await bcrypt.hash(createUserDto.password, salt);
             createUserDto.password = hash;
-            const user = new this.userModel(createUserDto);
-            const savedUser = await user.save();
-            return savedUser;
+            const verificationToken = (0, uuid_1.v4)();
+            const newUser = await this.userModel.create({
+                ...createUserDto,
+                role: 2,
+                isVerified: false,
+                verificationToken
+            });
+            await this.mailerServices.sendUserEmail(createUserDto.name, verificationToken, createUserDto.email);
+            return newUser;
         }
         catch (error) {
             if (error.message.includes('E11000 duplicate key error')) {
@@ -96,6 +109,7 @@ exports.UserService = UserService;
 exports.UserService = UserService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, mongoose_1.InjectModel)(user_schema_1.User.name)),
-    __metadata("design:paramtypes", [mongoose_2.Model])
+    __metadata("design:paramtypes", [mongoose_2.Model,
+        mail_service_1.MailService])
 ], UserService);
 //# sourceMappingURL=user.service.js.map

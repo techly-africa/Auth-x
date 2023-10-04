@@ -4,4 +4,7 @@ export declare class CreateUserDto {
     password: string;
     role?: 0 | 1 | 2;
     phone?: string;
+    gender?: string;
+    verificationToken?: string;
+    isVerified?: boolean;
 }

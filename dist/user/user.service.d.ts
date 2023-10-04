@@ -2,9 +2,11 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './schemas/user.schema';
 import { Model } from 'mongoose';
+import { MailService } from 'src/mail/mail.service';
 export declare class UserService {
     private userModel;
-    constructor(userModel: Model<User>);
+    private mailerServices;
+    constructor(userModel: Model<User>, mailerServices: MailService);
     create(createUserDto: CreateUserDto): Promise<User>;
     findAll(): Promise<User[]>;
     findOne(id: string): Promise<User>;

@@ -16,6 +16,7 @@ const admin_guard_1 = require("../auth/Guards/admin.guard");
 const passport_1 = require("@nestjs/passport");
 const config_1 = require("@nestjs/config");
 const jwt_1 = require("@nestjs/jwt");
+const mail_module_1 = require("../mail/mail.module");
 let UserModule = class UserModule {
 };
 exports.UserModule = UserModule;
@@ -34,7 +35,8 @@ exports.UserModule = UserModule = __decorate([
                     };
                 }
             }),
-            mongoose_1.MongooseModule.forFeature([{ name: user_schema_1.User.name, schema: user_schema_1.userSchema }])
+            mongoose_1.MongooseModule.forFeature([{ name: user_schema_1.User.name, schema: user_schema_1.userSchema }]),
+            mail_module_1.MailModule
         ],
         controllers: [user_controller_1.UserController],
         providers: [user_service_1.UserService, admin_guard_1.AdminGuard],

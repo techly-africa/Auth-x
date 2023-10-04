@@ -6,21 +6,39 @@ import { User } from './schemas/user.schema';
 import { Model } from 'mongoose';
 import * as bcrypt from 'bcrypt';
 import { ConfigService } from '@nestjs/config';
+import { v4 as uuidv4 } from 'uuid';
+import { MailService } from 'src/mail/mail.service';
 
 @Injectable()
 export class UserService {
   constructor(
-    @InjectModel(User.name) private userModel: Model<User>) {}
+    @InjectModel(User.name)
+    private userModel: Model<User>,
+    private mailerServices: MailService
+    ) {}
 
   async create(createUserDto: CreateUserDto): Promise<User> {
+    const { name, email, password, gender } = createUserDto;
+    if (!name || !email || !password || !gender) {
+      throw new BadRequestException('Invalid Inputs!');
+    }
     try {
       const salt = 10
       const hash = await bcrypt.hash(createUserDto.password, salt)
       createUserDto.password = hash
-      const user = new this.userModel(createUserDto)
-      const savedUser = await user.save()
 
-      return savedUser
+      const verificationToken = uuidv4();
+
+      const newUser = await this.userModel.create({
+        ...createUserDto,
+        role: 2,
+        isVerified: false,
+        verificationToken
+      });
+
+      await this.mailerServices.sendUserEmail(createUserDto.name, verificationToken, createUserDto.email);
+
+      return newUser
     } catch(error) {
       if(error.message.includes('E11000 duplicate key error')) {
         return Promise.reject(new BadRequestException('User with that email already exist.'))
