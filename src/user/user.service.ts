@@ -50,7 +50,6 @@ export class UserService {
 
   async findAll(): Promise<User[]> {
     try {
-      // const token = req.headers.authorization.token    //  here I had the idea of returning a number of users based on the role of the request initiator
       const users = await this.userModel.find()
 
       return users
