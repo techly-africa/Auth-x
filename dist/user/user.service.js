@@ -42,7 +42,7 @@ let UserService = class UserService {
                 verificationToken
             });
             await this.mailerServices.sendUserEmail(createUserDto.name, verificationToken, createUserDto.email);
-            return newUser;
+            return { message: 'Thank you for registering with us. An email containing a verification link has been sent to your registered email address. Please check your inbox to complete the registration process.' };
         }
         catch (error) {
             if (error.message.includes('E11000 duplicate key error')) {

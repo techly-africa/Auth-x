@@ -36,7 +36,10 @@ export class AuthService {
         if (!passwordMatch) {
           throw new BadRequestException("Invalid Credentials");
         }
-      
+        const userVerify = await this.userModel.findOne({isVerified: true});
+        if(!userVerify) {
+          throw new BadRequestException("Please verify your Email")
+        }
         const token = this.jwtServices.sign({
           id: existUser._id,
           name: existUser.name,

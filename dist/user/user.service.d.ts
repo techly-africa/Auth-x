@@ -7,7 +7,9 @@ export declare class UserService {
     private userModel;
     private mailerServices;
     constructor(userModel: Model<User>, mailerServices: MailService);
-    create(createUserDto: CreateUserDto): Promise<User>;
+    create(createUserDto: CreateUserDto): Promise<{
+        message: string;
+    }>;
     findAll(): Promise<User[]>;
     findOne(id: string): Promise<User>;
     update(id: string, updateUserDto: UpdateUserDto): Promise<User>;
