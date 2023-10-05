@@ -6,21 +6,39 @@ import { User } from './schemas/user.schema';
 import { Model } from 'mongoose';
 import * as bcrypt from 'bcrypt';
 import { ConfigService } from '@nestjs/config';
+import { v4 as uuidv4 } from 'uuid';
+import { MailService } from 'src/mail/mail.service';
 
 @Injectable()
 export class UserService {
   constructor(
-    @InjectModel(User.name) private userModel: Model<User>) {}
+    @InjectModel(User.name)
+    private userModel: Model<User>,
+    private mailerServices: MailService
+    ) {}
 
-  async create(createUserDto: CreateUserDto): Promise<User> {
+  async create(createUserDto: CreateUserDto): Promise<{message: string}> {
+    const { name, email, password, gender } = createUserDto;
+    if (!name || !email || !password || !gender) {
+      throw new BadRequestException('Invalid Inputs!');
+    }
     try {
       const salt = 10
       const hash = await bcrypt.hash(createUserDto.password, salt)
       createUserDto.password = hash
-      const user = new this.userModel(createUserDto)
-      const savedUser = await user.save()
 
-      return savedUser
+      const verificationToken = uuidv4();
+
+      const newUser = await this.userModel.create({
+        ...createUserDto,
+        role: 2,
+        isVerified: false,
+        verificationToken
+      });
+
+      await this.mailerServices.sendUserEmail(createUserDto.name, verificationToken, createUserDto.email);
+
+      return {message: 'Thank you for registering with us. An email containing a verification link has been sent to your registered email address. Please check your inbox to complete the registration process.'}
     } catch(error) {
       if(error.message.includes('E11000 duplicate key error')) {
         return Promise.reject(new BadRequestException('User with that email already exist.'))
@@ -32,7 +50,6 @@ export class UserService {
 
   async findAll(): Promise<User[]> {
     try {
-      // const token = req.headers.authorization.token    //  here I had the idea of returning a number of users based on the role of the request initiator
       const users = await this.userModel.find()
 
       return users

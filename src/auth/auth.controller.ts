@@ -1,4 +1,4 @@
-import { Body, Controller, Post, UsePipes } from '@nestjs/common';
+import { Body, Controller, Post, UsePipes, Get, Param } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginUserDto } from './login-user.dto';
 import { LoginUserValidationPipe } from './Validations/login-user-validation.pipe';
@@ -20,5 +20,10 @@ export class AuthController {
         user : LoginUserDto
     ) : Promise<{token : string}> {
         return this.authService.loginUser(user);
+    }
+
+    @Get('verify/:token')
+    async verifyEmail(@Param('token') token: string){
+      return this.authService.verifyUserToken(token)
     }
 }
