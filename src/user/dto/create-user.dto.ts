@@ -14,7 +14,6 @@ export class CreateUserDto {
     @IsNotEmpty()
     password: string
 
-    @ApiProperty()
     role?: 0 | 1 | 2
 
     @ApiProperty()
@@ -22,10 +21,6 @@ export class CreateUserDto {
 
     @ApiProperty()
     gender?: string;
-
-    @ApiProperty()
     verificationToken? : string
-
-    @ApiProperty()
     isVerified? : boolean
 }

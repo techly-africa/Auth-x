@@ -1,10 +1,10 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsNotEmpty } from 'class-validator';
 
 export class LoginUserDto {
   @ApiProperty({ required: false })
   email?: string;
-  @ApiProperty()
+  @ApiPropertyOptional()
   phone?: string;
   @ApiProperty()
   @IsNotEmpty()

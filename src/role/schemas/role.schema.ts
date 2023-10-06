@@ -6,6 +6,9 @@ export class Role {
     @Prop()
     @IsNotEmpty()
     roleName: string
+
+    @Prop()
+    description: string
 }
 
 export const roleSchema = SchemaFactory.createForClass(Role)
