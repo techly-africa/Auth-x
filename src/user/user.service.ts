@@ -108,9 +108,12 @@ export class UserService {
   async findOneWithRoles(userId: string) {
     return this.userModel
       .findById(userId)
-      .populate("roles", "roleName description") // Populate the 'roles' field with 'Role' documents
+      .populate({
+        path: "roles",
+        select: "roleName description",
+      })
       .exec();
-  }
+  }  
   async assignRolesToUser(userId: string, roleIds: string[]) {
     try {
       const user = await this.userModel.findById(userId);
@@ -130,7 +133,7 @@ export class UserService {
       const roles = await this.roleModel.find({ _id: { $in: roleIds } });
   
       if (roles.length !== roleIds.length) {
-        throw new NotFoundException("One or more roles not found");
+        throw new NotFoundException("Role does not exist");
       }
   
       user.roles = user.roles.concat(roles.map((role) => role._id));
@@ -138,7 +141,7 @@ export class UserService {
   
       return user;
     } catch (error) {
-      throw error; // Handle or log the error as needed
+      throw error;
     }
 
   }

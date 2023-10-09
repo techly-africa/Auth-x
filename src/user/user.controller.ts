@@ -55,4 +55,12 @@ export class UserController {
 
     return user;
   }
+
+  @Get(':id/roles')
+  async findUserRoles(
+    @Param('id') userId : string
+  ){
+    return this.userService.findOneWithRoles(userId);
+  }
+
 }
