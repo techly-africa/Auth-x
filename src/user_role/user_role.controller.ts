@@ -7,9 +7,12 @@ import { UpdateUserRoleDto } from './dto/update-user_role.dto';
 export class UserRoleController {
   constructor(private readonly userRoleService: UserRoleService) {}
 
-  @Post()
-  create(@Body() createUserRoleDto: CreateUserRoleDto) {
-    return this.userRoleService.create(createUserRoleDto);
+  @Post(':userId/assign-role/:roleId')
+  async assignRoleToUser(
+    @Param('userId') userId: string,
+    @Param('roleId') roleId: string,
+  ): Promise<{ message: string }>{
+    return this.userRoleService.assignRoleToUser(userId, roleId)
   }
 
   @Get()

@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, InternalServerErrorException } from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectModel } from '@nestjs/mongoose';
@@ -8,13 +8,16 @@ import * as bcrypt from 'bcrypt';
 import { ConfigService } from '@nestjs/config';
 import { v4 as uuidv4 } from 'uuid';
 import { MailService } from 'src/mail/mail.service';
+import { Role } from 'src/role/schemas/role.schema';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectModel(User.name)
     private userModel: Model<User>,
-    private mailerServices: MailService
+    private mailerServices: MailService,
+    @InjectModel(Role.name) 
+    private roleModel: Model<Role>
     ) {}
 
   async create(createUserDto: CreateUserDto): Promise<{message: string}> {
@@ -100,5 +103,43 @@ export class UserService {
     } catch(error) {
       throw new InternalServerErrorException()
     }
+  }
+
+  async findOneWithRoles(userId: string) {
+    return this.userModel
+      .findById(userId)
+      .populate("roles", "roleName description") // Populate the 'roles' field with 'Role' documents
+      .exec();
+  }
+  async assignRolesToUser(userId: string, roleIds: string[]) {
+    try {
+      const user = await this.userModel.findById(userId);
+  
+      if (!user) {
+        throw new NotFoundException(`User with ID ${userId} not found`);
+      }
+  
+      const existingRoles = user.roles.map((roleId) => roleId.toString());
+      
+      for (const roleId of roleIds) {
+        if (existingRoles.includes(roleId)) {
+          throw new ConflictException(`User already has the role with ID ${roleId}`);
+        }
+      }
+  
+      const roles = await this.roleModel.find({ _id: { $in: roleIds } });
+  
+      if (roles.length !== roleIds.length) {
+        throw new NotFoundException("One or more roles not found");
+      }
+  
+      user.roles = user.roles.concat(roles.map((role) => role._id));
+      await user.save();
+  
+      return user;
+    } catch (error) {
+      throw error; // Handle or log the error as needed
+    }
+
   }
 }

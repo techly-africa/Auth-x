@@ -7,4 +7,4 @@ export class UserRole {
     role: ObjectId
 }
 
-const userRoleSchema = SchemaFactory.createForClass(UserRole)
+ export const userRoleSchema = SchemaFactory.createForClass(UserRole)

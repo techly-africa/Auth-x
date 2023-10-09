@@ -9,6 +9,7 @@ import { ConfigService } from '@nestjs/config';
 import { config } from 'process';
 import { JwtModule } from '@nestjs/jwt';
 import { MailModule } from 'src/mail/mail.module';
+import { Role, roleSchema } from 'src/role/schemas/role.schema';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { MailModule } from 'src/mail/mail.module';
       }
     }),
     MongooseModule.forFeature([{name: User.name, schema: userSchema}]),
+    MongooseModule.forFeature([{name: Role.name, schema: roleSchema}]),
     MailModule
   ],
   controllers: [UserController],

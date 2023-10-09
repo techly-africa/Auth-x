@@ -41,4 +41,18 @@ export class UserController {
   remove(@Param('id') id: string) {
     return this.userService.remove(id);
   }
+
+  @Post(":userId/assign-roles")
+  async assignRolesToUser(
+    @Param("userId") userId: string,
+    @Body() body: { roleIds: string[] },
+  ) {
+    const { roleIds } = body;
+    const user = await this.userService.assignRolesToUser(
+      userId,
+      roleIds,
+    );
+
+    return user;
+  }
 }
