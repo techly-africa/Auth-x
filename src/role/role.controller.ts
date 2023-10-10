@@ -1,10 +1,17 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { RoleService } from './role.service';
 import { CreateRoleDto } from './dto/create-role.dto';
 import { UpdateRoleDto } from './dto/update-role.dto';
 import { Role } from './schemas/role.schema';
 import { ApiTags } from '@nestjs/swagger';
-
 
 @ApiTags('Role Management')
 @Controller('role')
@@ -14,14 +21,14 @@ export class RoleController {
   @Post()
   async CreateRole(
     @Body()
-    role: CreateRoleDto
-  ): Promise<{message: string}> {
-    return this.roleService.createRole(role)
+    role: CreateRoleDto,
+  ): Promise<{ message: string }> {
+    return this.roleService.createRole(role);
   }
 
   @Get()
-  async findAll():Promise<Role[]> {
-    return this.roleService.findAllRoles()
+  async findAll(): Promise<Role[]> {
+    return this.roleService.findAllRoles();
   }
 
   @Get(':id')

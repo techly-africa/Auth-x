@@ -1,6 +1,6 @@
-import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import { IsEmail, IsNotEmpty } from "class-validator";
-import { Document, Schema as MongooseSchema, Types } from "mongoose";
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { IsEmail, IsNotEmpty } from 'class-validator';
+import { Document, Schema as MongooseSchema, Types } from 'mongoose';
 
 @Schema({ timestamps: true })
 export class User extends Document {
@@ -36,7 +36,7 @@ export class User extends Document {
   verificationToken: string;
 
   @Prop({
-    type: [{ type: Types.ObjectId, ref: "Role" }], // Use Types.ObjectId
+    type: [{ type: Types.ObjectId, ref: 'Role' }], // Use Types.ObjectId
   })
   roles: Types.ObjectId[];
 }

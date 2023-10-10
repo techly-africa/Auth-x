@@ -10,21 +10,21 @@ import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
-    PassportModule.register({defaultStrategy: 'jwt'}),
+    PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.registerAsync({
       inject: [ConfigService],
       useFactory: (config: ConfigService) => {
         return {
           secret: config.get<string>('JWT_SECRET'),
-          signOptions:{
-            expiresIn: config.get<string | number>('JWT_EXPIRE')
-          }
-        }
-      }
+          signOptions: {
+            expiresIn: config.get<string | number>('JWT_EXPIRE'),
+          },
+        };
+      },
     }),
-    MongooseModule.forFeature([{name: User.name, schema: userSchema}])
+    MongooseModule.forFeature([{ name: User.name, schema: userSchema }]),
   ],
   controllers: [AuthController],
-  providers: [AuthService]
+  providers: [AuthService],
 })
 export class AuthModule {}

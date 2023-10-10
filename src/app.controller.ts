@@ -2,7 +2,7 @@ import { Controller, Get } from '@nestjs/common';
 import { AppService } from './app.service';
 import { ApiTags } from '@nestjs/swagger';
 
-@ApiTags("Welcome to MPACASH")
+@ApiTags('Welcome to MPACASH')
 @Controller()
 export class AppController {
   constructor(private readonly appService: AppService) {}

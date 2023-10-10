@@ -1,4 +1,9 @@
-import { ArgumentMetadata, BadRequestException, Injectable, PipeTransform } from '@nestjs/common';
+import {
+  ArgumentMetadata,
+  BadRequestException,
+  Injectable,
+  PipeTransform,
+} from '@nestjs/common';
 import { LoginUserDto } from '../login-user.dto';
 
 @Injectable()
@@ -7,7 +12,6 @@ export class LoginUserValidationPipe implements PipeTransform {
     if (!value.email && !value.phone) {
       throw new BadRequestException('Either email or phone must be provided.');
     }
-
 
     return value;
   }
