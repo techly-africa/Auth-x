@@ -6,35 +6,35 @@ import { ObjectId } from 'mongoose';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AdminGuard } from '../auth/Guards/admin.guard';
 
-@ApiTags('User Management')
+
 @Controller('users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
-
+  @ApiTags('User Management')
   @ApiOperation({summary: 'Create a user'})
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
     return this.userService.create(createUserDto);
   }
-
+  @ApiTags('User Management')
   @ApiOperation({summary: 'Get all users'})
   @Get()
   findAll() {
     return this.userService.findAll();
   }
-
+  @ApiTags('User Management')
   @ApiOperation({summary: 'Get a specific user'})
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.userService.findOne(id);
   }
-
+  @ApiTags('User Management')
   @ApiOperation({summary: 'Update a specific user'})
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     return this.userService.update(id, updateUserDto);
   }
-
+  @ApiTags('User Management')
   @ApiOperation({summary: 'Delete a specific user'})
   @Delete(':id')
 
@@ -42,6 +42,8 @@ export class UserController {
     return this.userService.remove(id);
   }
 
+  @ApiTags('User Role Assignment & UnAssignment')
+  @ApiOperation({summary: 'Assign User roles'})
   @Post(":userId/assign-roles")
   async assignRolesToUser(
     @Param("userId") userId: string,
@@ -56,6 +58,8 @@ export class UserController {
     return user;
   }
 
+  @ApiTags('User Role Assignment & UnAssignment')
+  @ApiOperation({summary: 'View Roles of a certain User'})
   @Get(':id/roles')
   async findUserRoles(
     @Param('id') userId : string
@@ -63,6 +67,8 @@ export class UserController {
     return this.userService.findOneWithRoles(userId);
   }
 
+  @ApiTags('User Role Assignment & UnAssignment')
+  @ApiOperation({summary: 'Remove roles from a user '})
   @Post(':userId/unassign-role/:roleId')
   async unassignUserRole(
     @Param('userId') userId: string,
