@@ -3,7 +3,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from './schemas/user.schema';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import * as bcrypt from 'bcrypt';
 import { ConfigService } from '@nestjs/config';
 import { v4 as uuidv4 } from 'uuid';
@@ -144,5 +144,25 @@ export class UserService {
       throw error;
     }
 
+  }
+
+  async unassignUserRole(userId: string, roleId: string): Promise<{ message: string }> {
+    const user = await this.userModel.findById(userId);
+  
+    if (!user) {
+      throw new BadRequestException('User does not exist');
+    }
+  
+    // Convert the roleId string to an ObjectId
+    const roleIdAsObjectId = new Types.ObjectId(roleId);
+    if (user.roles.includes(roleIdAsObjectId)) {
+      // Remove the roleId from the user's roles array
+      user.roles = user.roles.filter((userRoleId) => userRoleId.toHexString() !== roleIdAsObjectId.toHexString());
+      await user.save();
+  
+      return { message: 'Role unassigned successfully' };
+    } else {
+      throw new BadRequestException('User does not have the specified role');
+    }
   }
 }

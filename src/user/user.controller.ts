@@ -63,4 +63,12 @@ export class UserController {
     return this.userService.findOneWithRoles(userId);
   }
 
+  @Post(':userId/unassign-role/:roleId')
+  async unassignUserRole(
+    @Param('userId') userId: string,
+    @Param('roleId') roleId: string,
+  ): Promise<{ message: string }> {
+    return this.userService.unassignUserRole(userId, roleId)
+  }
+
 }
