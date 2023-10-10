@@ -23,7 +23,7 @@ export class AdminGuard implements CanActivate {
       });
 
       if (payload.role !== 0) {
-        throw new UnauthorizedException("Insufficient permissions");
+        throw new UnauthorizedException('Insufficient permissions');
       }
       request['user'] = payload;
     } catch {

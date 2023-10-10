@@ -1,42 +1,44 @@
-import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import { IsEmail, IsNotEmpty } from "class-validator";
-import { ObjectId } from "mongoose";
-
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { IsEmail, IsNotEmpty } from 'class-validator';
+import { Document, Schema as MongooseSchema, Types } from 'mongoose';
 
 @Schema({ timestamps: true })
-export class User {
-    _id: ObjectId
-    
-    @Prop()
-    @IsNotEmpty()
-    name: string
+export class User extends Document {
+  @Prop()
+  @IsNotEmpty()
+  name: string;
 
-    @Prop({
-        unique: true
-    })
-    @IsEmail()
-    email: string
+  @Prop({
+    unique: true,
+  })
+  @IsEmail()
+  email: string;
 
-    @Prop()
-    @IsNotEmpty()
-    password: string
+  @Prop()
+  @IsNotEmpty()
+  password: string;
 
-    @Prop({
-        default: 2
-    })
-    role: number
+  @Prop({
+    default: 2,
+  })
+  role: number;
 
-    @Prop()
-    phone: string
+  @Prop()
+  phone: string;
 
-    @Prop()
-    gender: string
+  @Prop()
+  gender: string;
 
-    @Prop()
-    isVerified: boolean
+  @Prop()
+  isVerified: boolean;
 
-    @Prop()
-    verificationToken: string
+  @Prop()
+  verificationToken: string;
+
+  @Prop({
+    type: [{ type: Types.ObjectId, ref: 'Role' }], // Use Types.ObjectId
+  })
+  roles: Types.ObjectId[];
 }
 
-export const userSchema = SchemaFactory.createForClass(User)
+export const userSchema = SchemaFactory.createForClass(User);
