@@ -45,4 +45,16 @@ export class RoleController {
   async remove(@Param('id') id: string) {
     return this.roleService.removeRole(id);
   }
+
+  @Post(':roleId/assign-permission')
+  async assignPermissionsToRoles(
+    @Param('roleId') roleId: string,
+    @Body() body: { permissionIds: string[] },
+  ) {
+    const { permissionIds } = body;
+    const role = await this.roleService.assignPermissionToRole(
+      roleId,
+      permissionIds,
+    );
+  }
 }
