@@ -13,8 +13,8 @@ import { Model, Types } from 'mongoose';
 import * as bcrypt from 'bcrypt';
 import { ConfigService } from '@nestjs/config';
 import { v4 as uuidv4 } from 'uuid';
-import { MailService } from 'src/mail/mail.service';
-import { Role } from 'src/role/schemas/role.schema';
+import { MailService } from '../mail/mail.service';
+import { Role } from '../role/schemas/role.schema';
 
 @Injectable()
 export class UserService {
@@ -24,7 +24,7 @@ export class UserService {
     private mailerServices: MailService,
     @InjectModel(Role.name)
     private roleModel: Model<Role>,
-  ) {}
+  ) { }
 
   async create(createUserDto: CreateUserDto): Promise<{ message: string }> {
     const { name, email, password, gender } = createUserDto;
