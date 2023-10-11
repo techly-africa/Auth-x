@@ -1,11 +1,16 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import { IsNotEmpty } from "class-validator";
+import { Document } from "mongoose";
 
-@Schema({ timestamps: true })
-export class Permission {
+
+@Schema({timestamps: true})
+
+
+export class Permission extends Document {
     @Prop()
-    @IsNotEmpty()
-    permissionName: string
+    name: string
+
+    @Prop()
+    description: string
 }
 
 export const permissionSchema = SchemaFactory.createForClass(Permission)

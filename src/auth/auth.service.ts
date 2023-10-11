@@ -56,7 +56,7 @@ export class AuthService {
 
     return {
       token: token,
-      message: `Welcome, ${existUser.name}! Your login was successful, and we're thrilled to have you join the MPACash community. Get ready to explore a world of convenient financial services at your fingertips.`,
+      message: `Welcome, ${existUser.name}! Your login was successful, and we're thrilled to have you join our community.`,
     };
   }
 

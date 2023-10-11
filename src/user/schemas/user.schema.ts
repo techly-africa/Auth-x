@@ -36,7 +36,7 @@ export class User extends Document {
   verificationToken: string;
 
   @Prop({
-    type: [{ type: Types.ObjectId, ref: 'Role' }], // Use Types.ObjectId
+    type: [{ type: Types.ObjectId, ref: 'Role' }], 
   })
   roles: Types.ObjectId[];
 }
