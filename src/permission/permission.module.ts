@@ -6,9 +6,11 @@ import { Permission, permissionSchema } from './schemas/permission.schema';
 
 @Module({
   imports: [
-    MongooseModule.forFeature([{name: Permission.name, schema: permissionSchema}])
+    MongooseModule.forFeature([
+      { name: Permission.name, schema: permissionSchema },
+    ]),
   ],
   providers: [PermissionService],
-  controllers: [PermissionController]
+  controllers: [PermissionController],
 })
 export class PermissionModule {}

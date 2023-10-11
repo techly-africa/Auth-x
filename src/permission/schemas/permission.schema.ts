@@ -1,16 +1,13 @@
-import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import { Document } from "mongoose";
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Document } from 'mongoose';
 
-
-@Schema({timestamps: true})
-
-
+@Schema({ timestamps: true })
 export class Permission extends Document {
-    @Prop()
-    name: string
+  @Prop()
+  name: string;
 
-    @Prop()
-    description: string
+  @Prop()
+  description: string;
 }
 
-export const permissionSchema = SchemaFactory.createForClass(Permission)
+export const permissionSchema = SchemaFactory.createForClass(Permission);
