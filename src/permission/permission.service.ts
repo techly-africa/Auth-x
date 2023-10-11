@@ -3,10 +3,11 @@ import {
   ConflictException,
   Injectable,
   InternalServerErrorException,
+  NotFoundException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Permission } from './schemas/permission.schema';
-import { Model } from 'mongoose';
+import mongoose, { Model } from 'mongoose';
 import { CreatePermDto } from './DTO/create-perm.dto';
 
 @Injectable()
@@ -39,5 +40,24 @@ export class PermissionService {
     const permissions = await this.permissionModel.find();
 
     return permissions;
+  }
+
+  async findPermissionById(permId): Promise<Permission> {
+    try {
+      const permisionExist = await this.permissionModel.findById(permId);
+      if (!permisionExist) {
+        throw new NotFoundException(
+          `Permission with id${permId} does not exist `,
+        );
+      }
+      return permisionExist;
+    } catch (error) {
+      if (error instanceof mongoose.Error.CastError) {
+        // Handle invalid ID format errors
+        throw new BadRequestException('Invalid Permission ID format');
+      } else {
+        throw new InternalServerErrorException('Server Error', error.message);
+      }
+    }
   }
 }

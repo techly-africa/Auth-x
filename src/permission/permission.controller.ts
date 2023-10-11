@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { PermissionService } from './permission.service';
 import { CreatePermDto } from './DTO/create-perm.dto';
 
@@ -17,5 +17,13 @@ export class PermissionController {
   @Get()
   async findAllPermissions() {
     return this.permissionServices.findAllPermissions();
+  }
+
+  @Get(':permId')
+  async findPermissionById(
+    @Param('permId')
+    permId: string,
+  ) {
+    return this.permissionServices.findPermissionById(permId);
   }
 }
