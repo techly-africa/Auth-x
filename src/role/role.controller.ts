@@ -56,7 +56,7 @@ export class RoleController {
       roleId,
       permissionIds,
     );
-    return role
+    return role;
   }
 
   @Get(':roleId/permissions')
@@ -65,5 +65,13 @@ export class RoleController {
     roleId: string,
   ) {
     return this.roleService.findRoleWithPermissions(roleId);
+  }
+
+  @Post(':roleId/unassign-permission/:permId')
+  async unassignPermission(
+    @Param('roleId') roleId: string,
+    @Param('permId') permId: string,
+  ) {
+    return this.roleService.unassignPermissionFromRole(roleId, permId);
   }
 }

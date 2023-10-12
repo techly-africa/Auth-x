@@ -12,7 +12,7 @@ export class Role {
   description: string;
 
   @Prop({
-    type: [{ type: Types.ObjectId, ref: 'Permission' }] // Define the reference to 'Permissions' model
+    type: [{ type: Types.ObjectId, ref: 'Permission' }],
   })
   permissions: Types.ObjectId[];
 }

@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common';
 import { CreateRoleDto } from './dto/create-role.dto';
 import { UpdateRoleDto } from './dto/update-role.dto';
-import mongoose, { Model } from 'mongoose';
+import mongoose, { Model, Types } from 'mongoose';
 import { Role } from './schemas/role.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { Permission } from 'src/permission/schemas/permission.schema';
@@ -176,12 +176,31 @@ export class RoleService {
           select: 'name description',
         })
         .exec();
-  
+
       return role;
     } catch (error) {
       console.error(`Error finding role with permissions: ${error}`);
       throw error;
     }
   }
-  
+  async unassignPermissionFromRole(roleId: string, permissionId: string) {
+    const role = await this.rolesModel.findById(roleId);
+
+    if (!role) {
+      throw new NotFoundException('Role doesnot exits');
+    }
+    const permissionIdAsObjectId = new Types.ObjectId(permissionId);
+    if (role.permissions.includes(permissionIdAsObjectId)) {
+      role.permissions = role.permissions.filter(
+        (rolePermId) =>
+          rolePermId.toHexString() !== permissionIdAsObjectId.toHexString(),
+      );
+      await role.save();
+      return {
+        message: 'Permission unassigned Successfully',
+      };
+    } else {
+      throw new InternalServerErrorException('Server Error');
+    }
+  }
 }
