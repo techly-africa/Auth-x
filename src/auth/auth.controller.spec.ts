@@ -35,9 +35,7 @@ describe('AuthController', () => {
             };
 
             mockAuthService.loginUser.mockResolvedValueOnce({ token: mockToken });
-
             const result = await authController.LoginUser(mockUser);
-
             expect(result).toEqual({ token: mockToken });
             expect(mockAuthService.loginUser).toHaveBeenCalledWith(mockUser);
         });
