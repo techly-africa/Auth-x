@@ -1,75 +1,79 @@
-<a href="https://codeclimate.com/github/techly-africa/mpa-cash-backend/maintainability"><img src="https://api.codeclimate.com/v1/badges/1f6c2024dcbec25991dc/maintainability" /></a>
-<a href='https://coveralls.io/github/techly-africa/mpa-cash-backend?branch=main'><img src='https://coveralls.io/repos/github/techly-africa/mpa-cash-backend/badge.svg?branch=main' alt='Coverage Status' /></a>
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# Role-Based Access Control Backend(Auth-X)
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+This is a role-based access control backend for managing permissions and roles. It is built using NestJS and MongoDB as the database.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Features
 
-## Description
+- User authentication and authorization.
+- Role management.
+- Permission assignment and unassignment to roles.
+- Swagger API documentation.
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Technology Stack
 
-## Installation
+- [NestJS](https://nestjs.com/): A progressive Node.js framework for building efficient and scalable server-side applications.
+- [MongoDB](https://www.mongodb.com/): A NoSQL database for storing application data.
 
-```bash
-$ npm install
-```
+## Getting Started
 
-## Running the app
+1. Clone the repository:
 
-```bash
-# development
-$ npm run start
+   ```bash
+   git clone https://github.com/techly-africa/Auth-x.git
+   cd Auth-x
+   npm install
+   npm run start:dev
+   ```
 
-# watch mode
-$ npm run start:dev
+   The server will start on http://localhost:3000 by default.
 
-# production mode
-$ npm run start:prod
-```
+## Swagger API Documentation
 
-## Test
+The API endpoints for this project are documented using Swagger. You can explore the API and test requests by visiting the Swagger documentation.
 
-```bash
-# unit tests
-$ npm run test
+- **Swagger API Documentation:** [Auth-x Swagger Documentation](http://51.20.63.73/api)
 
-# e2e tests
-$ npm run test:e2e
+For detailed information on the available endpoints, request parameters, and response formats, please refer to the Swagger documentation.
 
-# test coverage
-$ npm run test:cov
-```
+You can also access the Swagger documentation when the server is running at [http://localhost:3000/api](http://localhost:3000/api).
 
-## Support
+## Techly Africa
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+This project is proudly developed and maintained by [Techly Africa](https://www.techlyafrica.com/).
 
-## Stay in touch
+For inquiries, support, or business opportunities, please don't hesitate to get in touch with us.
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+- Website: [Techly Africa](https://www.techlyafrica.com/)
+- Email: copain@techly.africa
+
+Techly Africa is a technology company dedicated to providing innovative solutions and services to empower businesses and organizations. We specialize in creating cutting-edge software applications, web solutions, and digital experiences.
+
+If you'd like to learn more about our work or discuss potential collaborations, please reach out to us through the provided contact information.
+
+
+
+## Test Coverage with Coveralls
+
+We use Coveralls to track and display test coverage for this project. Test coverage is an essential metric for understanding the quality and reliability of the codebase.
+
+- **Test Coverage Status:**
+  <a href="https://codeclimate.com/github/techly-africa/mpa-cash-backend/maintainability"><img src="https://api.codeclimate.com/v1/badges/1f6c2024dcbec25991dc/maintainability" /></a>
+  <a href='https://coveralls.io/github/techly-africa/mpa-cash-backend?branch=main'><img src='https://coveralls.io/repos/github/techly-africa/mpa-cash-backend/badge.svg?branch=main' alt='Coverage Status' /></a>
+
+## Contributors
+
+We want to express our gratitude to the following contributors for their valuable contributions to this project:
+
+- [Terence Faid JABO](https://github.com/faid-terence)
+- [Etienne KAGABA](https://github.com/kagaba-etienne)
+- [Edwin NAMBAJE](https://github.com/edwinnambaje)
+
+Your contributions have played a significant role in making this project successful. We appreciate your hard work and dedication.
+
+If you'd like to contribute to this project, please see our [Contributing Guidelines](CONTRIBUTING.md) for more information.
+
+Thank you for being a part of this project!
 
 ## License
 
-Nest is [MIT licensed](LICENSE).
+This project is open-source and available under the [Techly License](LICENSE).
