@@ -56,5 +56,14 @@ export class RoleController {
       roleId,
       permissionIds,
     );
+    return role
+  }
+
+  @Get(':roleId/permissions')
+  async findRolePermissions(
+    @Param('roleId')
+    roleId: string,
+  ) {
+    return this.roleService.findRoleWithPermissions(roleId);
   }
 }

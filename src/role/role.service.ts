@@ -167,4 +167,21 @@ export class RoleService {
       throw new InternalServerErrorException('Server error', error.message);
     }
   }
+  async findRoleWithPermissions(roleId: string) {
+    try {
+      const role = await this.rolesModel
+        .findById(roleId)
+        .populate({
+          path: 'permissions',
+          select: 'name description',
+        })
+        .exec();
+  
+      return role;
+    } catch (error) {
+      console.error(`Error finding role with permissions: ${error}`);
+      throw error;
+    }
+  }
+  
 }
