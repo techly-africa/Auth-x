@@ -5,10 +5,12 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.useGlobalPipes(new ValidationPipe())
+  app.useGlobalPipes(new ValidationPipe());
   const config = new DocumentBuilder()
-    .setTitle('Mpa-cash Backend')
-    .setDescription('The Mpa-Cash API description')
+    .setTitle('Role Based Access Control APIs')
+    .setDescription(
+      "Welcome to the Role-Based Access Control (RBAC) API documentation. RBAC is a powerful and flexible authorization mechanism that allows you to manage and control access to your application's resources based on user roles and permissions. This API provides a straightforward way to integrate RBAC functionality into your application, enabling you to easily define and enforce access policies.",
+    )
     .setVersion('1.0')
     .build();
   const document = SwaggerModule.createDocument(app, config);

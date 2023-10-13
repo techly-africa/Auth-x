@@ -13,7 +13,7 @@ import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ObjectId } from 'mongoose';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AdminGuard } from '../auth/Guards/admin.guard';
 
 @Controller('users')
@@ -50,9 +50,22 @@ export class UserController {
     return this.userService.remove(id);
   }
 
-  @ApiTags('User Role Assignment & UnAssignment')
+  @ApiTags('User Role Management')
   @ApiOperation({ summary: 'Assign User roles' })
   @Post(':userId/assign-roles')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        roleIds: {
+          type: 'array',
+          items: {
+            type: 'string',
+          },
+        },
+      },
+    },
+  })
   async assignRolesToUser(
     @Param('userId') userId: string,
     @Body() body: { roleIds: string[] },
@@ -63,14 +76,14 @@ export class UserController {
     return user;
   }
 
-  @ApiTags('User Role Assignment & UnAssignment')
+  @ApiTags('User Role Management')
   @ApiOperation({ summary: 'View Roles of a certain User' })
   @Get(':id/roles')
   async findUserRoles(@Param('id') userId: string) {
     return this.userService.findOneWithRoles(userId);
   }
 
-  @ApiTags('User Role Assignment & UnAssignment')
+  @ApiTags('User Role Management')
   @ApiOperation({ summary: 'Remove roles from a user ' })
   @Post(':userId/unassign-role/:roleId')
   async unassignUserRole(

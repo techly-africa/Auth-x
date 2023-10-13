@@ -1,37 +1,58 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+} from '@nestjs/common';
 import { PermissionService } from './permission.service';
-import { CreatePermissionDto } from './dto/create-permission.dto';
-import { UpdatePermissionDto } from './dto/update-permission.dto';
+import { CreatePermDto } from './DTO/create-perm.dto';
 import { ApiTags } from '@nestjs/swagger';
+import { UpdatePermDto } from './DTO/update-perm.dto';
 
-
-ApiTags('Permission Management')
+@ApiTags('Permission Management')
 @Controller('permission')
 export class PermissionController {
-  constructor(private readonly permissionService: PermissionService) {}
+  constructor(private readonly permissionServices: PermissionService) {}
 
   @Post()
-  create(@Body() createPermissionDto: CreatePermissionDto) {
-    return this.permissionService.create(createPermissionDto);
+  async createPermission(
+    @Body()
+    permission: CreatePermDto,
+  ) {
+    return this.permissionServices.createPermission(permission);
   }
 
   @Get()
-  findAll() {
-    return this.permissionService.findAll();
+  async findAllPermissions() {
+    return this.permissionServices.findAllPermissions();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.permissionService.findOne(+id);
+  @Get(':permId')
+  async findPermissionById(
+    @Param('permId')
+    permId: string,
+  ) {
+    return this.permissionServices.findPermissionById(permId);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updatePermissionDto: UpdatePermissionDto) {
-    return this.permissionService.update(+id, updatePermissionDto);
+  async updatePermission(
+    @Param('id')
+    id: string,
+    @Body()
+    updatedPermission: UpdatePermDto,
+  ) {
+    return this.permissionServices.updatePermission(id, updatedPermission);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.permissionService.remove(+id);
+  async deletePermission(
+    @Param('id')
+    id: string,
+  ) {
+    return this.permissionServices.deletePermission(id);
   }
 }

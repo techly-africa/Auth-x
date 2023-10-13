@@ -161,7 +161,7 @@ export class UserService {
 
       return user;
     } catch (error) {
-      throw error;
+      throw new InternalServerErrorException('Server error', error.message);
     }
   }
 

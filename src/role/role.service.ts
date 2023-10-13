@@ -1,20 +1,24 @@
 import {
   BadRequestException,
+  ConflictException,
   Injectable,
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
 import { CreateRoleDto } from './dto/create-role.dto';
 import { UpdateRoleDto } from './dto/update-role.dto';
-import mongoose, { Model } from 'mongoose';
+import mongoose, { Model, Types } from 'mongoose';
 import { Role } from './schemas/role.schema';
 import { InjectModel } from '@nestjs/mongoose';
+import { Permission } from 'src/permission/schemas/permission.schema';
 
 @Injectable()
 export class RoleService {
   constructor(
     @InjectModel(Role.name)
     private rolesModel: Model<Role>,
+    @InjectModel(Permission.name)
+    private permissionModel: Model<Permission>,
   ) {}
 
   async createRole(role: CreateRoleDto): Promise<{ message: string }> {
@@ -25,7 +29,6 @@ export class RoleService {
       if (!roleName || !description) {
         throw new BadRequestException('Invalid Inputs!');
       }
-
       // Check if the role already exists
       const roleExist = await this.rolesModel.findOne({ roleName });
 
@@ -118,5 +121,85 @@ export class RoleService {
     return {
       message: 'Role Deleted Successfully',
     };
+  }
+
+  async assignPermissionToRole(
+    roleId: string,
+    permissionIds: string[],
+  ): Promise<{ message: string }> {
+    try {
+      const role = await this.rolesModel.findById(roleId);
+
+      if (!role) {
+        throw new NotFoundException('Role not found');
+      }
+
+      const existingPermissions = role.permissions.map((permissionId) =>
+        permissionId.toString(),
+      );
+
+      for (const permissionId of permissionIds) {
+        if (existingPermissions.includes(permissionId)) {
+          throw new ConflictException(
+            `Role already has the permission with ID ${permissionId}`,
+          );
+        }
+      }
+
+      const permissions = await this.permissionModel.find({
+        _id: { $in: permissionIds },
+      });
+
+      if (permissions.length !== permissionIds.length) {
+        throw new NotFoundException('Permission does not exist');
+      }
+
+      role.permissions = role.permissions.concat(
+        permissions.map((permission) => permission._id),
+      );
+
+      await role.save();
+      return {
+        message: 'Permission assigned to role Successfully',
+      };
+    } catch (error) {
+      throw new InternalServerErrorException('Server error', error.message);
+    }
+  }
+  async findRoleWithPermissions(roleId: string) {
+    try {
+      const role = await this.rolesModel
+        .findById(roleId)
+        .populate({
+          path: 'permissions',
+          select: 'name description',
+        })
+        .exec();
+
+      return role;
+    } catch (error) {
+      console.error(`Error finding role with permissions: ${error}`);
+      throw error;
+    }
+  }
+  async unassignPermissionFromRole(roleId: string, permissionId: string) {
+    const role = await this.rolesModel.findById(roleId);
+
+    if (!role) {
+      throw new NotFoundException('Role doesnot exits');
+    }
+    const permissionIdAsObjectId = new Types.ObjectId(permissionId);
+    if (role.permissions.includes(permissionIdAsObjectId)) {
+      role.permissions = role.permissions.filter(
+        (rolePermId) =>
+          rolePermId.toHexString() !== permissionIdAsObjectId.toHexString(),
+      );
+      await role.save();
+      return {
+        message: 'Permission unassigned Successfully',
+      };
+    } else {
+      throw new InternalServerErrorException('Server Error');
+    }
   }
 }
