@@ -1,5 +1,8 @@
+import { ApiProperty } from '@nestjs/swagger';
+
 export class UpdatePermDto {
-    name: string;
-    description: string;
-  }
-  
+  @ApiProperty()
+  name: string;
+  @ApiProperty()
+  description: string;
+}

@@ -29,7 +29,6 @@ export class RoleService {
       if (!roleName || !description) {
         throw new BadRequestException('Invalid Inputs!');
       }
-
       // Check if the role already exists
       const roleExist = await this.rolesModel.findOne({ roleName });
 
