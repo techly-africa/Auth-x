@@ -19,7 +19,7 @@ export class RoleService {
     private rolesModel: Model<Role>,
     @InjectModel(Permission.name)
     private permissionModel: Model<Permission>,
-  ) {}
+  ) { }
 
   async createRole(role: CreateRoleDto): Promise<{ message: string }> {
     const { roleName, description } = role;
@@ -43,9 +43,7 @@ export class RoleService {
 
       return { message: 'Role Created Successfully' };
     } catch (error) {
-      // Handle any errors
       throw new InternalServerErrorException(
-        'Role creation failed',
         error.message,
       );
     }
@@ -80,7 +78,7 @@ export class RoleService {
         throw new BadRequestException('Invalid role ID format');
       } else {
         // Handle other errors
-        throw new InternalServerErrorException('Server Error', error.message);
+        throw new InternalServerErrorException(error.message);
       }
     }
   }
@@ -102,6 +100,7 @@ export class RoleService {
 
       return updatedRole;
     } catch (error) {
+      console.log(error)
       // Handle any errors
       if (error instanceof mongoose.Error.CastError) {
         // Handle invalid ID format errors
