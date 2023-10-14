@@ -2,10 +2,13 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { LoginUserDto } from './login-user.dto';
+import { LoginUserValidationPipe } from './Validations/login-user-validation.pipe'; // Import the validation pipe
+import { ArgumentMetadata, BadRequestException } from '@nestjs/common';
 
 describe('AuthController', () => {
     let authController: AuthController;
     let authService: AuthService;
+    let pipe: LoginUserValidationPipe;
 
     const mockAuthService = {
         loginUser: jest.fn(),
@@ -22,7 +25,7 @@ describe('AuthController', () => {
                 },
             ],
         }).compile();
-
+        pipe = new LoginUserValidationPipe();
         authController = module.get<AuthController>(AuthController);
         authService = module.get<AuthService>(AuthService);
     });
@@ -48,6 +51,32 @@ describe('AuthController', () => {
             const result = await authController.verifyEmail(mockToken);
             expect(result).toEqual({ message: 'Email Verification Successful' });
             expect(mockAuthService.verifyUserToken).toHaveBeenCalledWith(mockToken);
+        });
+    });
+
+    describe('LoginUserValidationPipe', () => {
+        it('should throw BadRequestException if neither email nor phone is provided', () => {
+            const mockValue = { email: '', phone: '', password: 'password' };
+            const mockMetadata = {} as ArgumentMetadata;
+
+            try {
+                pipe.transform(mockValue, mockMetadata);
+            } catch (e) {
+                expect(e).toBeInstanceOf(BadRequestException);
+                expect(e.message).toBe('Either email or phone must be provided.');
+            }
+        });
+
+        it('should return value if either email or phone is provided', () => {
+            const mockValue1 = { email: 'nambajeeedwin@gmail.com', password: 'password' };
+            const mockValue2 = { phone: '0787415987', password: 'password' };
+            const mockMetadata = {} as ArgumentMetadata;
+
+            const result1 = pipe.transform(mockValue1, mockMetadata);
+            const result2 = pipe.transform(mockValue2, mockMetadata);
+
+            expect(result1).toEqual(mockValue1);
+            expect(result2).toEqual(mockValue2);
         });
     });
 });

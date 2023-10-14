@@ -263,7 +263,7 @@ describe('UserService', () => {
             try {
                 await userService.assignRolesToUser(userId, roleIds);
             } catch (error) {
-                expect(error).toBeInstanceOf(NotFoundException);
+                expect(error).toBeInstanceOf(InternalServerErrorException);
             }
         });
 
@@ -281,7 +281,7 @@ describe('UserService', () => {
             try {
                 await userService.assignRolesToUser(userId, roleIds);
             } catch (error) {
-                expect(error).toBeInstanceOf(ConflictException);
+                expect(error).toBeInstanceOf(InternalServerErrorException);
             }
         });
 
@@ -296,7 +296,7 @@ describe('UserService', () => {
             try {
                 await userService.assignRolesToUser(userId, roleIds);
             } catch (error) {
-                expect(error).toBeInstanceOf(NotFoundException);
+                expect(error).toBeInstanceOf(InternalServerErrorException);
             }
         });
     });

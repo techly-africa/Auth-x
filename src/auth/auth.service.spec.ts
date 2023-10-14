@@ -92,7 +92,7 @@ describe('AuthService', () => {
             const result = await authService.loginUser({ email: 'nambajeeedwin@gmail.com', password: 'password' });
             expect(result).toEqual({
                 token: 'someToken',
-                message: `Welcome, edwin! Your login was successful, and we're thrilled to have you join the MPACash community. Get ready to explore a world of convenient financial services at your fingertips.`,
+                message: `Welcome, edwin! Your login was successful, and we're thrilled to have you join our community.`,
             });
         });
 

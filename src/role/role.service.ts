@@ -10,7 +10,7 @@ import { UpdateRoleDto } from './dto/update-role.dto';
 import mongoose, { Model, Types } from 'mongoose';
 import { Role } from './schemas/role.schema';
 import { InjectModel } from '@nestjs/mongoose';
-import { Permission } from 'src/permission/schemas/permission.schema';
+import { Permission } from '../permission/schemas/permission.schema';
 
 @Injectable()
 export class RoleService {
@@ -23,7 +23,6 @@ export class RoleService {
 
   async createRole(role: CreateRoleDto): Promise<{ message: string }> {
     const { roleName, description } = role;
-
     try {
       // Validate inputs
       if (!roleName || !description) {
@@ -100,7 +99,6 @@ export class RoleService {
 
       return updatedRole;
     } catch (error) {
-      console.log(error)
       // Handle any errors
       if (error instanceof mongoose.Error.CastError) {
         // Handle invalid ID format errors
