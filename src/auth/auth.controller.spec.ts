@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { LoginUserDto } from './login-user.dto';
-import { LoginUserValidationPipe } from './Validations/login-user-validation.pipe'; // Import the validation pipe
+import { LoginUserValidationPipe } from './Validations/login-user-validation.pipe';
 import { ArgumentMetadata, BadRequestException } from '@nestjs/common';
 
 describe('AuthController', () => {
