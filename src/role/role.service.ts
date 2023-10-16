@@ -10,7 +10,7 @@ import { UpdateRoleDto } from './dto/update-role.dto';
 import mongoose, { Model, Types } from 'mongoose';
 import { Role } from './schemas/role.schema';
 import { InjectModel } from '@nestjs/mongoose';
-import { Permission } from 'src/permission/schemas/permission.schema';
+import { Permission } from '../permission/schemas/permission.schema';
 
 @Injectable()
 export class RoleService {
@@ -19,11 +19,10 @@ export class RoleService {
     private rolesModel: Model<Role>,
     @InjectModel(Permission.name)
     private permissionModel: Model<Permission>,
-  ) {}
+  ) { }
 
   async createRole(role: CreateRoleDto): Promise<{ message: string }> {
     const { roleName, description } = role;
-
     try {
       // Validate inputs
       if (!roleName || !description) {
@@ -43,9 +42,7 @@ export class RoleService {
 
       return { message: 'Role Created Successfully' };
     } catch (error) {
-      // Handle any errors
       throw new InternalServerErrorException(
-        'Role creation failed',
         error.message,
       );
     }
@@ -80,7 +77,7 @@ export class RoleService {
         throw new BadRequestException('Invalid role ID format');
       } else {
         // Handle other errors
-        throw new InternalServerErrorException('Server Error', error.message);
+        throw new InternalServerErrorException(error.message);
       }
     }
   }

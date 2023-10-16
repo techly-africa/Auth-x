@@ -1,3 +1,7 @@
+- **Test Coverage Status:**
+  <a href="https://codeclimate.com/github/techly-africa/mpa-cash-backend/maintainability"><img src="https://api.codeclimate.com/v1/badges/1f6c2024dcbec25991dc/maintainability" /></a>
+  <a href='https://coveralls.io/repos/github/techly-africa/Auth-x/badge.svg?branch=main'><img src='https://coveralls.io/repos/github/techly-africa/Auth-x/badge.svg?branch=main' alt='Coverage Status' /></a>
+
 # Role-Based Access Control Backend(Auth-X)
 
 This is a role-based access control backend for managing permissions and roles. It is built using NestJS and MongoDB as the database.
@@ -50,15 +54,9 @@ Techly Africa is a technology company dedicated to providing innovative solution
 
 If you'd like to learn more about our work or discuss potential collaborations, please reach out to us through the provided contact information.
 
-
-
 ## Test Coverage with Coveralls
 
 We use Coveralls to track and display test coverage for this project. Test coverage is an essential metric for understanding the quality and reliability of the codebase.
-
-- **Test Coverage Status:**
-  <a href="https://codeclimate.com/github/techly-africa/mpa-cash-backend/maintainability"><img src="https://api.codeclimate.com/v1/badges/1f6c2024dcbec25991dc/maintainability" /></a>
-  <a href='https://coveralls.io/github/techly-africa/mpa-cash-backend?branch=main'><img src='https://coveralls.io/repos/github/techly-africa/mpa-cash-backend/badge.svg?branch=main' alt='Coverage Status' /></a>
 
 ## Contributors
 

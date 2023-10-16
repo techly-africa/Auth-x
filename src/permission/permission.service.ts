@@ -10,14 +10,13 @@ import { Permission } from './schemas/permission.schema';
 import mongoose, { Model } from 'mongoose';
 import { CreatePermDto } from './DTO/create-perm.dto';
 import { UpdatePermDto } from './DTO/update-perm.dto';
-import { retry } from 'rxjs';
 
 @Injectable()
 export class PermissionService {
   constructor(
     @InjectModel(Permission.name)
     private permissionModel: Model<Permission>,
-  ) {}
+  ) { }
 
   async createPermission(perm: CreatePermDto): Promise<Permission> {
     const { name, description } = perm;
@@ -31,7 +30,6 @@ export class PermissionService {
         throw new ConflictException('Permission Already exists');
       }
       const newPermission = await this.permissionModel.create(perm);
-
       return newPermission;
     } catch (error) {
       throw new InternalServerErrorException('Error', error.message);
@@ -80,7 +78,6 @@ export class PermissionService {
       }
 
       const updatedPermission = await permission.save();
-
       return updatedPermission;
     } catch (error) {
       if (error instanceof mongoose.Error.CastError) {
