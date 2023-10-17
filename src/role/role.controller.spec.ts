@@ -67,7 +67,7 @@ describe('RoleController', () => {
 
     describe('findOne', () => {
         it('should return a role by ID', async () => {
-            const roleId = 'some-id';
+            const roleId = '362767328';
             const role = {
                 _id: roleId,
                 roleName: 'Admin',

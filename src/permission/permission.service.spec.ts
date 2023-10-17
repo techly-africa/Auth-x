@@ -3,13 +3,10 @@ import { getModelToken } from '@nestjs/mongoose';
 import { PermissionService } from './permission.service';
 import {
     BadRequestException,
-    ConflictException,
     InternalServerErrorException,
-    NotFoundException,
 } from '@nestjs/common';
 import { CreatePermDto } from './DTO/create-perm.dto';
 import { UpdatePermDto } from './DTO/update-perm.dto';
-import mongoose from 'mongoose';
 import { Permission } from './schemas/permission.schema';
 
 describe('PermissionService', () => {
@@ -41,8 +38,8 @@ describe('PermissionService', () => {
     describe('createPermission', () => {
         it('should create a new permission', async () => {
             const createPermDto: CreatePermDto = {
-                name: 'Test Permission',
-                description: 'Test Description',
+                name: 'new Permission',
+                description: 'new Description',
             };
 
             mockPermissionModel.findOne.mockResolvedValue(null);
@@ -56,10 +53,12 @@ describe('PermissionService', () => {
         it('should throw BadRequestException if inputs are invalid', async () => {
             const createPermDto: CreatePermDto = {
                 name: '',
-                description: 'Test Description',
+                description: 'bad request description',
             };
 
-            await expect(permissionService.createPermission(createPermDto)).rejects.toThrow(BadRequestException);
+            await expect(
+                permissionService.createPermission(createPermDto),
+            ).rejects.toThrow(BadRequestException);
         });
 
         it('should throw ConflictException if permission already exists', async () => {
@@ -70,7 +69,9 @@ describe('PermissionService', () => {
 
             mockPermissionModel.findOne.mockResolvedValue(createPermDto);
 
-            await expect(permissionService.createPermission(createPermDto)).rejects.toThrow(InternalServerErrorException);
+            await expect(
+                permissionService.createPermission(createPermDto),
+            ).rejects.toThrow(InternalServerErrorException);
         });
 
         it('should throw InternalServerErrorException on error', async () => {
@@ -81,7 +82,9 @@ describe('PermissionService', () => {
 
             mockPermissionModel.findOne.mockRejectedValue(new Error('Some error'));
 
-            await expect(permissionService.createPermission(createPermDto)).rejects.toThrow(InternalServerErrorException);
+            await expect(
+                permissionService.createPermission(createPermDto),
+            ).rejects.toThrow(InternalServerErrorException);
         });
     });
 
@@ -123,34 +126,40 @@ describe('PermissionService', () => {
         });
 
         it('should throw NotFoundException if permission does not exist', async () => {
-            const permissionId = 'non-existent-id';
+            const permissionId = 'unexistent-id';
 
             mockPermissionModel.findById.mockResolvedValue(null);
 
-            await expect(permissionService.findPermissionById(permissionId)).rejects.toThrow(InternalServerErrorException);
+            await expect(
+                permissionService.findPermissionById(permissionId),
+            ).rejects.toThrow(InternalServerErrorException);
         });
 
         it('should throw BadRequestException for invalid ID format', async () => {
-            const permissionId = 'invalid-id-format';
+            const permissionId = 'invalid-id';
             mockPermissionModel.findById.mockRejectedValue(new Error('CastError'));
-            await expect(permissionService.findPermissionById(permissionId)).rejects.toThrow(InternalServerErrorException);
+            await expect(
+                permissionService.findPermissionById(permissionId),
+            ).rejects.toThrow(InternalServerErrorException);
         });
 
         it('should throw InternalServerErrorException on error', async () => {
-            const permissionId = 'some-id';
+            const permissionId = 'valid-id';
 
             mockPermissionModel.findById.mockRejectedValue(new Error('Some error'));
 
-            await expect(permissionService.findPermissionById(permissionId)).rejects.toThrow(InternalServerErrorException);
+            await expect(
+                permissionService.findPermissionById(permissionId),
+            ).rejects.toThrow(InternalServerErrorException);
         });
     });
 
     describe('updatePermission', () => {
         it('should update a permission', async () => {
-            const permissionId = 'some-id';
+            const permissionId = 'updated-id';
             const updatedPermDto: UpdatePermDto = {
-                name: 'Updated Permission',
-                description: 'Updated Description',
+                name: 'Get permission',
+                description: 'get all permission',
             };
             const existingPermission = {
                 _id: permissionId,
@@ -162,40 +171,46 @@ describe('PermissionService', () => {
             mockPermissionModel.findById.mockResolvedValue(existingPermission);
             existingPermission.save.mockResolvedValue({
                 _id: permissionId,
-                name: 'Updated Permission',
-                description: 'Updated Description',
+                name: 'Get permission',
+                description: 'get all permission',
             });
 
-            const result = await permissionService.updatePermission(permissionId, updatedPermDto);
+            const result = await permissionService.updatePermission(
+                permissionId,
+                updatedPermDto,
+            );
 
             expect(result).toEqual({
                 _id: permissionId,
-                name: 'Updated Permission',
-                description: 'Updated Description',
+                name: 'Get permission',
+                description: 'get all permission',
             });
         });
 
-
         it('should throw NotFoundException if permission does not exist', async () => {
-            const permissionId = 'non-existent-id';
+            const permissionId = 'unexistent-id';
             const updatedPermDto: UpdatePermDto = {
-                name: 'Updated Permission',
-                description: 'Updated Description',
+                name: 'Updated Permission name',
+                description: 'Updated Description name',
             };
 
             mockPermissionModel.findById.mockResolvedValue(null);
 
-            await expect(permissionService.updatePermission(permissionId, updatedPermDto)).rejects.toThrow(InternalServerErrorException);
+            await expect(
+                permissionService.updatePermission(permissionId, updatedPermDto),
+            ).rejects.toThrow(InternalServerErrorException);
         });
 
         it('should throw BadRequestException for invalid ID format', async () => {
             const permissionId = 'invalid-id-format';
             const updatedPermDto: UpdatePermDto = {
-                name: 'Updated Permission',
-                description: 'Updated Description',
+                name: 'Permission',
+                description: ' Description of permission',
             };
             mockPermissionModel.findById.mockRejectedValue(new Error('CastError'));
-            await expect(permissionService.updatePermission(permissionId, updatedPermDto)).rejects.toThrow(InternalServerErrorException);
+            await expect(
+                permissionService.updatePermission(permissionId, updatedPermDto),
+            ).rejects.toThrow(InternalServerErrorException);
         });
 
         it('should throw InternalServerErrorException on error', async () => {
@@ -205,7 +220,9 @@ describe('PermissionService', () => {
                 description: 'Updated Description',
             };
             mockPermissionModel.findById.mockRejectedValue(new Error('Some error'));
-            await expect(permissionService.updatePermission(permissionId, updatedPermDto)).rejects.toThrow(InternalServerErrorException);
+            await expect(
+                permissionService.updatePermission(permissionId, updatedPermDto),
+            ).rejects.toThrow(InternalServerErrorException);
         });
     });
 
@@ -225,19 +242,25 @@ describe('PermissionService', () => {
         it('should throw NotFoundException if permission does not exist', async () => {
             const permissionId = 'non-existent-id';
             mockPermissionModel.findById.mockResolvedValue(null);
-            await expect(permissionService.deletePermission(permissionId)).rejects.toThrow(InternalServerErrorException);
+            await expect(
+                permissionService.deletePermission(permissionId),
+            ).rejects.toThrow(InternalServerErrorException);
         });
 
         it('should throw BadRequestException for invalid ID format', async () => {
             const permissionId = 'invalid-id-format';
             mockPermissionModel.findById.mockRejectedValue(new Error('CastError'));
-            await expect(permissionService.deletePermission(permissionId)).rejects.toThrow(InternalServerErrorException);
+            await expect(
+                permissionService.deletePermission(permissionId),
+            ).rejects.toThrow(InternalServerErrorException);
         });
 
         it('should throw InternalServerErrorException on error', async () => {
             const permissionId = 'some-id';
             mockPermissionModel.findById.mockRejectedValue(new Error('Some error'));
-            await expect(permissionService.deletePermission(permissionId)).rejects.toThrow(InternalServerErrorException);
+            await expect(
+                permissionService.deletePermission(permissionId),
+            ).rejects.toThrow(InternalServerErrorException);
         });
     });
 });

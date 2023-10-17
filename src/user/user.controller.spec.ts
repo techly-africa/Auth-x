@@ -60,7 +60,7 @@ describe('UserController', () => {
 
     describe('findOne', () => {
         it('should get a specific user', async () => {
-            const userId = 'some-id';
+            const userId = 'id-find';
             const user = { _id: userId, name: 'Nambaje Edwin', email: 'nambajedwin@gmail.com' };
             userServiceMock.findOne.mockResolvedValue(user);
             const result = await userController.findOne(userId);
@@ -84,7 +84,7 @@ describe('UserController', () => {
 
     describe('remove', () => {
         it('should remove a user', async () => {
-            const userId = 'some-id';
+            const userId = 'id-remove';
             const deletedUser = { _id: userId, name: 'John Doe', email: 'john.doe@example.com' };
             userServiceMock.remove.mockResolvedValue(deletedUser);
             const result = await userController.remove(userId);
