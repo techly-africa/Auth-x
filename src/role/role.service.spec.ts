@@ -82,7 +82,7 @@ describe('RoleService', () => {
             await expect(roleService.createRole(createRoleDto)).rejects.toThrow(InternalServerErrorException);
         });
 
-        it('should throw InternalServerErrorException on error', async () => {
+        it('should throw InternalServerErrorException', async () => {
             const createRoleDto: CreateRoleDto = {
                 roleName: 'Admin',
                 description: 'Administrator Role',
@@ -118,7 +118,7 @@ describe('RoleService', () => {
 
     describe('findOneRole', () => {
         it('should return a role by ID', async () => {
-            const roleId = 'some-id';
+            const roleId = 'id';
             const role = {
                 _id: roleId,
                 roleName: 'Admin',
@@ -142,7 +142,7 @@ describe('RoleService', () => {
         });
 
         it('should throw NotFoundException if role does not exist', async () => {
-            const roleId = 'non-existent-id';
+            const roleId = 'un-existent-id';
 
             mockRolesModel.findById.mockReturnValue(null);
 
@@ -160,10 +160,10 @@ describe('RoleService', () => {
 
     describe('update', () => {
         it('should update a role', async () => {
-            const roleId = 'some-id';
+            const roleId = 'id-update';
             const updateRoleDto: UpdateRoleDto = {
-                roleName: 'Updated Role',
-                description: 'Updated Description',
+                roleName: 'Updated Role name',
+                description: 'Updated Description for role',
             };
 
             const existingRole = {
@@ -176,16 +176,16 @@ describe('RoleService', () => {
             mockRolesModel.findById.mockReturnValue(existingRole);
             existingRole.save.mockResolvedValue({
                 _id: roleId,
-                roleName: 'Updated Role',
-                description: 'Updated Description',
+                roleName: 'Updated Role name',
+                description: 'Updated Description for role',
             });
 
             const result = await roleService.update(roleId, updateRoleDto);
 
             expect(result).toEqual({
                 _id: roleId,
-                roleName: 'Updated Role',
-                description: 'Updated Description',
+                roleName: 'Updated Role name',
+                description: 'Updated Description for role',
             });
         });
 
@@ -202,10 +202,10 @@ describe('RoleService', () => {
         });
 
         it('should throw NotFoundException if role does not exist', async () => {
-            const roleId = 'non-existent-id';
+            const roleId = 'unavailable-id';
             const updateRoleDto: UpdateRoleDto = {
-                roleName: 'Updated Role',
-                description: 'Updated Description',
+                roleName: 'new Role name',
+                description: 'new Description name',
             };
 
             mockRolesModel.findById.mockReturnValue(null);
@@ -214,10 +214,10 @@ describe('RoleService', () => {
         });
 
         it('should throw InternalServerErrorException on error', async () => {
-            const roleId = 'some-id';
+            const roleId = 'available-id';
             const updateRoleDto: UpdateRoleDto = {
-                roleName: 'Updated Role',
-                description: 'Updated Description',
+                roleName: 'Updated Role name',
+                description: 'Updated Description name',
             };
 
             const existingRole = {
@@ -254,8 +254,7 @@ describe('RoleService', () => {
         });
 
         it('should throw NotFoundException if role does not exist', async () => {
-            const roleId = 'non-existent-id';
-
+            const roleId = 'unexistent-id';
             mockRolesModel.findByIdAndDelete.mockReturnValue(null);
 
             await expect(roleService.removeRole(roleId)).rejects.toThrow(BadRequestException);
@@ -352,8 +351,6 @@ describe('RoleService', () => {
             await expect(roleService.assignPermissionToRole(roleId, permissionIds)).rejects.toThrow(InternalServerErrorException);
         });
     });
-
-    // describe('findRoleWithPermissions', () => {
     //     it('should find a role with its permissions', async () => {
     //         const roleId = 'role-id';
 
