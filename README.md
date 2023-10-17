@@ -1,5 +1,6 @@
 - **Test Coverage Status:**
-  <a href="https://codeclimate.com/github/techly-africa/mpa-cash-backend/maintainability"><img src="https://api.codeclimate.com/v1/badges/1f6c2024dcbec25991dc/maintainability" /></a>
+<br>
+<a href="https://codeclimate.com/github/techly-africa/Auth-x/maintainability"><img src="https://api.codeclimate.com/v1/badges/57e44b095a375161ea1c/maintainability" /></a>
   <a href='https://coveralls.io/repos/github/techly-africa/Auth-x/badge.svg?branch=main'><img src='https://coveralls.io/repos/github/techly-africa/Auth-x/badge.svg?branch=main' alt='Coverage Status' /></a>
 
 # Role-Based Access Control Backend(Auth-X)
