@@ -27,6 +27,7 @@ export class UserController {
   }
   @ApiTags('User Management')
   @ApiOperation({ summary: 'Get all users' })
+  @UseGuards(AdminGuard)
   @Get()
   findAll() {
     return this.userService.findAll();
