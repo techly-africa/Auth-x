@@ -14,12 +14,10 @@ import { UpdateRoleDto } from './dto/update-role.dto';
 import { Role } from './schemas/role.schema';
 import { ApiBody, ApiTags } from '@nestjs/swagger';
 
-
 @Controller('role')
 export class RoleController {
   constructor(private readonly roleService: RoleService) {}
   @ApiTags('Role Management')
-
   @Post()
   async CreateRole(
     @Body()

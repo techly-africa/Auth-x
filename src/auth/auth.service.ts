@@ -16,7 +16,7 @@ export class AuthService {
     @InjectModel(User.name)
     private userModel: Model<User>,
     private jwtServices: JwtService,
-  ) { }
+  ) {}
 
   async loginUser(
     user: LoginUserDto,

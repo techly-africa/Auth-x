@@ -37,15 +37,15 @@ export class RoleCheckGuard implements CanActivate {
         const userRoles: Role[] = await this.roleModel.find({
           _id: { $in: userRoleIds },
         });
-        const requiredRole = 'admin';
+        const requiredRole = 'Super Admin';
         if (userRoles.some((role) => role.roleName === requiredRole)) {
-          return true; // Allow access
+          return true;
         }
         throw new UnauthorizedException('Insufficient permissions');
       }
       throw new UnauthorizedException('User not found');
     } catch (error) {
-      throw new UnauthorizedException('Invalid token');
+      throw new UnauthorizedException('Not Authorized');
     }
   }
 
