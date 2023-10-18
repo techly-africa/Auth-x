@@ -15,6 +15,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { ObjectId } from 'mongoose';
 import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AdminGuard } from '../auth/Guards/admin.guard';
+import { RoleCheckGuard } from 'src/auth/Guards/role.guard';
 
 @Controller('users')
 export class UserController {

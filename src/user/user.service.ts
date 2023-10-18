@@ -24,7 +24,7 @@ export class UserService {
     private mailerServices: MailService,
     @InjectModel(Role.name)
     private roleModel: Model<Role>,
-  ) { }
+  ) {}
 
   async create(createUserDto: CreateUserDto): Promise<{ message: string }> {
     const { name, email, password, gender } = createUserDto;
@@ -174,11 +174,8 @@ export class UserService {
     if (!user) {
       throw new BadRequestException('User does not exist');
     }
-
-    // Convert the roleId string to an ObjectId
     const roleIdAsObjectId = new Types.ObjectId(roleId);
     if (user.roles.includes(roleIdAsObjectId)) {
-      // Remove the roleId from the user's roles array
       user.roles = user.roles.filter(
         (userRoleId) =>
           userRoleId.toHexString() !== roleIdAsObjectId.toHexString(),

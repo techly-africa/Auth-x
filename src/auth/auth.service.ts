@@ -16,7 +16,7 @@ export class AuthService {
     @InjectModel(User.name)
     private userModel: Model<User>,
     private jwtServices: JwtService,
-  ) { }
+  ) {}
 
   async loginUser(
     user: LoginUserDto,
@@ -51,7 +51,7 @@ export class AuthService {
     const token = this.jwtServices.sign({
       id: existUser._id,
       name: existUser.name,
-      role: existUser.role,
+      roles: existUser.roles,
     });
 
     return {

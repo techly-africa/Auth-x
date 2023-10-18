@@ -10,6 +10,7 @@ import { config } from 'process';
 import { JwtModule } from '@nestjs/jwt';
 import { MailModule } from 'src/mail/mail.module';
 import { Role, roleSchema } from 'src/role/schemas/role.schema';
+import { RoleCheckGuard } from 'src/auth/Guards/role.guard';
 
 @Module({
   imports: [
@@ -30,6 +31,6 @@ import { Role, roleSchema } from 'src/role/schemas/role.schema';
     MailModule,
   ],
   controllers: [UserController],
-  providers: [UserService, AdminGuard],
+  providers: [UserService, AdminGuard, RoleCheckGuard],
 })
 export class UserModule {}
