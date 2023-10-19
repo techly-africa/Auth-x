@@ -81,6 +81,9 @@
       "!**/*.module.ts"
     ],
     "coverageDirectory": "../coverage",
+    "coveragePathIgnorePatterns": [
+      "<rootDir>/main.ts"
+    ],
     "testEnvironment": "node"
   }
 }
