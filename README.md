@@ -1,7 +1,8 @@
 - **Test Coverage Status:**
 <br>
 <a href="https://codeclimate.com/github/techly-africa/Auth-x/maintainability"><img src="https://api.codeclimate.com/v1/badges/57e44b095a375161ea1c/maintainability" /></a>
-  <a href='https://coveralls.io/repos/github/techly-africa/Auth-x/badge.svg?branch=main'><img src='https://coveralls.io/repos/github/techly-africa/Auth-x/badge.svg?branch=main' alt='Coverage Status' /></a>
+<a href='https://coveralls.io/github/techly-africa/Auth-x?branch=main'><img src='https://coveralls.io/repos/github/techly-africa/Auth-x/badge.svg?branch=main' alt='Coverage Status' /></a>
+
 
 # Role-Based Access Control Backend(Auth-X)
 
