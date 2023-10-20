@@ -6,8 +6,8 @@ import {
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { ObjectId, Types } from 'mongoose';
-import { Role } from 'src/role/schemas/role.schema';
-import { UserService } from 'src/user/user.service';
+import { Role } from '../../role/schemas/role.schema';
+import { UserService } from '../../user/user.service';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
@@ -18,7 +18,7 @@ export class RoleCheckGuard implements CanActivate {
     private userService: UserService,
     @InjectModel(Role.name)
     private roleModel: Model<Role>,
-  ) {}
+  ) { }
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();

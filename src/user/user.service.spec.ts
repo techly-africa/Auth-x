@@ -302,25 +302,6 @@ describe('UserService', () => {
     });
 
     describe('unassignUserRole', () => {
-        // it('should unassign a role from a user', async () => {
-        //     const userId = 'some-id';
-        //     const roleId = '55153a8014829a865bbf700d';
-        //     const user = {
-        //         _id: userId,
-        //         roles: [2],
-        //         save: jest.fn(),
-        //     };
-
-        //     roleModelMock.find.mockResolvedValue([
-        //         { _id: '55153a8014829a865bbf700d', roleName: 'Role 1', description: 'Description 1' }
-        //     ]);
-        //     userModelMock.findById.mockResolvedValue(user);
-        //     const result = await userService.unassignUserRole(userId, roleId);
-        //     console.log(result)
-        //     expect(result).toEqual({ message: 'Role unassigned successfully' });
-        //     expect(user.roles).toEqual(['2']);
-        //     expect(user.save).toHaveBeenCalled();
-        // });
         it('should throw BadRequestException if user does not exist', async () => {
             const userId = 'non-existing-id';
             const roleId = 'role-id-1';

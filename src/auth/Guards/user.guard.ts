@@ -6,10 +6,11 @@ import {
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
+import { User } from '../../user/schemas/user.schema';
 
 @Injectable()
-export class AdminGuard implements CanActivate {
-  constructor(private jwtService: JwtService) {}
+export class UserGuard implements CanActivate {
+  constructor(private jwtService: JwtService) { }
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
