@@ -5,8 +5,8 @@
 #### How should this be manually tested?
 
 ```
-git clone  https://github.com/techly-africa/mpa-cash-backend.git    
-cd mpacash-backend
+git clone  https://github.com/techly-africa/Auth-x.git 
+cd Auth-x
 git checkout branch-?
 npm i
 npm run start:dev
