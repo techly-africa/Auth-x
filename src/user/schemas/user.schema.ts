@@ -39,6 +39,10 @@ export class User extends Document {
     type: [{ type: Types.ObjectId, ref: 'Role' }],
   })
   roles: Types.ObjectId[];
+  @Prop({
+    default: false,
+  })
+  isDeleted: boolean;
 }
 
 export const userSchema = SchemaFactory.createForClass(User);
