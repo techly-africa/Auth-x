@@ -88,7 +88,7 @@ export class UserController {
   }
   @ApiTags('User Management')
   @ApiOperation({ summary: 'Delete a specific User' })
-  @Delete(':userId')
+  @Delete(':userId/temporary')
   async deleteUser(
     @Param('userId') userId: string,
   ): Promise<{ message: string }> {

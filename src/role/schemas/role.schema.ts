@@ -15,6 +15,9 @@ export class Role {
     type: [{ type: Types.ObjectId, ref: 'Permission' }],
   })
   permissions: Types.ObjectId[];
+
+  @Prop({default: false})
+  isDeleted: boolean
 }
 
 export const roleSchema = SchemaFactory.createForClass(Role);

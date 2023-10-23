@@ -213,4 +213,6 @@ export class UserService {
     const deletedUsers = await this.userModel.find({ isDeleted: true });
     return deletedUsers;
   }
+
+  
 }

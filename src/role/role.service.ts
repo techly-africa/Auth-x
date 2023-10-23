@@ -19,7 +19,7 @@ export class RoleService {
     private rolesModel: Model<Role>,
     @InjectModel(Permission.name)
     private permissionModel: Model<Permission>,
-  ) { }
+  ) {}
 
   async createRole(role: CreateRoleDto): Promise<{ message: string }> {
     const { roleName, description } = role;
@@ -42,9 +42,7 @@ export class RoleService {
 
       return { message: 'Role Created Successfully' };
     } catch (error) {
-      throw new InternalServerErrorException(
-        error.message,
-      );
+      throw new InternalServerErrorException(error.message);
     }
   }
 
@@ -198,5 +196,23 @@ export class RoleService {
     } else {
       throw new InternalServerErrorException('Server Error');
     }
+  }
+
+  async temporarilySuspendRole(roleId: string): Promise<{ message: string }> {
+    const role = await this.rolesModel.findById(roleId);
+    if (!role) {
+      throw new BadRequestException('Role not Found');
+    }
+    role.isDeleted = true;
+
+    await role.save();
+
+    return {
+      message: 'Role Deleted Temporarily',
+    };
+  }
+  async displaySuspendendRoles(): Promise<Role[]> {
+    const suspendedRoles = await this.rolesModel.find({ isDeleted: true });
+    return suspendedRoles;
   }
 }

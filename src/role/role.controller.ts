@@ -90,4 +90,17 @@ export class RoleController {
   ) {
     return this.roleService.unassignPermissionFromRole(roleId, permId);
   }
+
+  @ApiTags('Role Management')
+  @Delete(':roleId/temporary')
+  async temporarilySuspendRole(
+    @Param('roleId') roleId: string,
+  ): Promise<{ message: string }> {
+    return this.roleService.temporarilySuspendRole(roleId);
+  }
+  @ApiTags('Role Management')
+  @Get('temporary/deleted/roles')
+  async findSuspendedRoles(): Promise<Role[]> {
+    return this.roleService.displaySuspendendRoles();
+  }
 }
