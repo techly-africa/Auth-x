@@ -16,7 +16,7 @@ export class PermissionService {
   constructor(
     @InjectModel(Permission.name)
     private permissionModel: Model<Permission>,
-  ) { }
+  ) {}
 
   async createPermission(perm: CreatePermDto): Promise<Permission> {
     const { name, description } = perm;
@@ -37,7 +37,7 @@ export class PermissionService {
   }
 
   async findAllPermissions(): Promise<Permission[]> {
-    const permissions = await this.permissionModel.find();
+    const permissions = await this.permissionModel.find({ isDeleted: false });
 
     return permissions;
   }
@@ -49,6 +49,9 @@ export class PermissionService {
         throw new NotFoundException(
           `Permission with id${permId} does not exist `,
         );
+      }
+      if (permisionExist.isDeleted) {
+        throw new BadRequestException('User is Deleted temporarily');
       }
       return permisionExist;
     } catch (error) {
@@ -108,5 +111,23 @@ export class PermissionService {
         throw new InternalServerErrorException('Server Error', error.message);
       }
     }
+  }
+
+  async temporarilySuspendPermission(
+    permId: string,
+  ): Promise<{ message: string }> {
+    const permission = await this.permissionModel.findById(permId);
+    if (!permission) {
+      throw new BadRequestException('Permission not Found');
+    }
+    permission.isDeleted = true;
+    await permission.save();
+
+    return { message: 'Permission Deleted Temporarily' };
+  }
+
+  async displaySuspendendPermissions(): Promise<Permission[]> {
+    const permissions = await this.permissionModel.find({ isDeleted: true });
+    return permissions;
   }
 }

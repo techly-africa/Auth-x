@@ -36,15 +36,16 @@ export class RoleController {
     return this.roleService.findOneRole(id);
   }
   @ApiTags('Role Management')
-  @Patch(':id')
-  async update(@Param('id') id: string, @Body() updateRoleDto: UpdateRoleDto) {
-    return this.roleService.update(id, updateRoleDto);
-  }
-  @ApiTags('Role Management')
   @Delete(':id')
   async remove(@Param('id') id: string) {
     return this.roleService.removeRole(id);
   }
+  @ApiTags('Role Management')
+  @Patch(':id')
+  async update(@Param('id') id: string, @Body() updateRoleDto: UpdateRoleDto) {
+    return this.roleService.update(id, updateRoleDto);
+  }
+ 
   @ApiTags('Role Permission Managent')
   @Post(':roleId/assign-permission')
   @ApiBody({

@@ -38,12 +38,18 @@ export class UserController {
     return this.userService.findOne(id);
   }
   @ApiTags('User Management')
+  @ApiOperation({ summary: 'Delete a specific user' })
+  @Delete(':id')
+  remove(@Param('id') id: string) {
+    return this.userService.remove(id);
+  }
+
+  @ApiTags('User Management')
   @ApiOperation({ summary: 'Update a specific user' })
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     return this.userService.update(id, updateUserDto);
   }
-
   @ApiTags('User Role Management')
   @ApiOperation({ summary: 'Assign User roles' })
   @Post(':userId/assign-roles')

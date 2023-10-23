@@ -11,6 +11,7 @@ import { PermissionService } from './permission.service';
 import { CreatePermDto } from './DTO/create-perm.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { UpdatePermDto } from './DTO/update-perm.dto';
+import { Permission } from './schemas/permission.schema';
 
 @ApiTags('Permission Management')
 @Controller('permission')
@@ -54,5 +55,16 @@ export class PermissionController {
     id: string,
   ) {
     return this.permissionServices.deletePermission(id);
+  }
+  @Get('temporary/deleted/permissions')
+  async findSuspendendPermissions(): Promise<Permission[]> {
+    return this.permissionServices.displaySuspendendPermissions();
+  }
+
+  @Delete(':permId/temporary')
+  async temporarilyDeletePermission(
+    @Param('permId') permId: string,
+  ): Promise<{ message: string }> {
+    return this.permissionServices.temporarilySuspendPermission(permId);
   }
 }

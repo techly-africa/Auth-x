@@ -24,18 +24,14 @@ export class RoleService {
   async createRole(role: CreateRoleDto): Promise<{ message: string }> {
     const { roleName, description } = role;
     try {
-      // Validate inputs
       if (!roleName || !description) {
         throw new BadRequestException('Invalid Inputs!');
       }
-      // Check if the role already exists
       const roleExist = await this.rolesModel.findOne({ roleName });
 
       if (roleExist) {
         throw new BadRequestException('Role Already Exists');
       }
-
-      // Create the role
       await this.rolesModel.create({
         ...role,
       });
@@ -48,7 +44,7 @@ export class RoleService {
 
   async findAllRoles(): Promise<Role[]> {
     try {
-      const roles = await this.rolesModel.find();
+      const roles = await this.rolesModel.find({ isDeleted: false });
 
       return roles;
     } catch (error) {
@@ -58,23 +54,19 @@ export class RoleService {
 
   async findOneRole(id: string): Promise<Role> {
     try {
-      // Find the role by ID
       const role = await this.rolesModel.findById(id);
 
-      // Check if the role exists
       if (!role) {
         throw new NotFoundException('Role not found');
       }
-
-      // Return the found role
+      if (role.isDeleted) {
+        throw new BadRequestException('Role deleted temporarily');
+      }
       return role;
     } catch (error) {
-      // Handle any errors
       if (error instanceof mongoose.Error.CastError) {
-        // Handle invalid ID format errors
         throw new BadRequestException('Invalid role ID format');
       } else {
-        // Handle other errors
         throw new InternalServerErrorException(error.message);
       }
     }
@@ -97,12 +89,9 @@ export class RoleService {
 
       return updatedRole;
     } catch (error) {
-      // Handle any errors
       if (error instanceof mongoose.Error.CastError) {
-        // Handle invalid ID format errors
         throw new BadRequestException('Invalid role ID format');
       } else {
-        // Handle other errors
         throw new InternalServerErrorException('Server Error', error.message);
       }
     }
