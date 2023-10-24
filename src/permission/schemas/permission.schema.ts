@@ -8,6 +8,8 @@ export class Permission extends Document {
 
   @Prop()
   description: string;
+  @Prop({default: false})
+  isDeleted: boolean
 }
 
 export const permissionSchema = SchemaFactory.createForClass(Permission);

@@ -9,4 +9,5 @@ export class LoginUserDto {
   @ApiProperty()
   @IsNotEmpty()
   password: string;
+  isDeleted: boolean;
 }

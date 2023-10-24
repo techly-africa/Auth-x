@@ -14,10 +14,12 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ObjectId } from 'mongoose';
 import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { User } from './schemas/user.schema';
+import { Role } from 'src/role/schemas/role.schema';
 
 @Controller('users')
 export class UserController {
-  constructor(private readonly userService: UserService) { }
+  constructor(private readonly userService: UserService) {}
   @ApiTags('User Management')
   @ApiOperation({ summary: 'Create a user' })
   @Post()
@@ -37,18 +39,18 @@ export class UserController {
     return this.userService.findOne(id);
   }
   @ApiTags('User Management')
-  @ApiOperation({ summary: 'Update a specific user' })
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.userService.update(id, updateUserDto);
-  }
-  @ApiTags('User Management')
   @ApiOperation({ summary: 'Delete a specific user' })
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.userService.remove(id);
   }
 
+  @ApiTags('User Management')
+  @ApiOperation({ summary: 'Update a specific user' })
+  @Patch(':id')
+  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+    return this.userService.update(id, updateUserDto);
+  }
   @ApiTags('User Role Management')
   @ApiOperation({ summary: 'Assign User roles' })
   @Post(':userId/assign-roles')
@@ -90,5 +92,26 @@ export class UserController {
     @Param('roleId') roleId: string,
   ): Promise<{ message: string }> {
     return this.userService.unassignUserRole(userId, roleId);
+  }
+  @ApiTags('User Management')
+  @ApiOperation({ summary: 'Suspend a User' })
+  @Delete(':userId/temporary')
+  async deleteUser(
+    @Param('userId') userId: string,
+  ): Promise<{ message: string }> {
+    return this.userService.deleteUser(userId);
+  }
+  @ApiTags('User Management')
+  @ApiOperation({ summary: 'Display Deleted Users' })
+  @Get('deleted/users')
+  async findDeletedUsers(): Promise<User[]> {
+    return this.userService.displayDeletedUsers();
+  }
+
+  @ApiTags('User Management')
+  @ApiOperation({ summary: 'Restore Suspended User' })
+  @Post(':userId/restore')
+  async restoreUser(@Param('userId') userId: string): Promise<User> {
+    return this.userService.restoreDeletedUsers(userId);
   }
 }

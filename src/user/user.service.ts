@@ -67,7 +67,7 @@ export class UserService {
 
   async findAll(): Promise<User[]> {
     try {
-      const users = await this.userModel.find();
+      const users = await this.userModel.find({ isDeleted: false });
 
       return users;
     } catch (error) {
@@ -79,14 +79,20 @@ export class UserService {
     try {
       const userFound = await this.userModel.findById(id);
       if (!userFound) {
-        throw new BadRequestException('Not Found');
+        throw new NotFoundException('User Not Found');
+      }
+      if (userFound.isDeleted) {
+        throw new BadRequestException('User is deleted');
       }
       return userFound;
     } catch (error) {
-      if (error.message.includes('Not Found')) {
-        throw new BadRequestException('User Not Found');
+      if (
+        error instanceof NotFoundException ||
+        error instanceof BadRequestException
+      ) {
+        throw error;
       }
-      throw new InternalServerErrorException();
+      throw new InternalServerErrorException('Internal Server Error');
     }
   }
 
@@ -186,5 +192,40 @@ export class UserService {
     } else {
       throw new BadRequestException('User does not have the specified role');
     }
+  }
+
+  async deleteUser(userId: string): Promise<{ message: string }> {
+    const user = await this.userModel.findById(userId);
+
+    if (!user) {
+      throw new NotFoundException('User Not Found');
+    }
+    user.isDeleted = true;
+
+    await user.save();
+
+    return {
+      message: 'User Deleted Successfully !',
+    };
+  }
+
+  async displayDeletedUsers(): Promise<User[]> {
+    const deletedUsers = await this.userModel.find({ isDeleted: true });
+    return deletedUsers;
+  }
+
+  async restoreDeletedUsers(userId: string): Promise<User> {
+    const userToBeRestored = await this.userModel.findById(userId);
+    if (!userToBeRestored) {
+      throw new NotFoundException('User Not Found');
+    }
+    if (!userToBeRestored.isDeleted) {
+      throw new BadRequestException('User was not been deleted');
+    }
+
+    userToBeRestored.isDeleted = false;
+    userToBeRestored.save();
+
+    return userToBeRestored;
   }
 }

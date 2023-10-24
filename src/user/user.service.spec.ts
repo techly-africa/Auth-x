@@ -170,14 +170,14 @@ describe('UserService', () => {
             expect(result).toEqual(user);
         });
 
-        it('should throw a BadRequestException if user is not found', async () => {
+        it('should throw a NotFoundException if user is not found', async () => {
             const userId = 'non-existing-id';
             userModelMock.findById.mockResolvedValue(null);
 
             try {
                 await userService.findOne(userId);
             } catch (error) {
-                expect(error).toBeInstanceOf(BadRequestException);
+                expect(error).toBeInstanceOf(NotFoundException);
                 expect(error.message).toBe('User Not Found');
             }
         });
