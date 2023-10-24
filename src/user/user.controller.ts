@@ -15,6 +15,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { ObjectId } from 'mongoose';
 import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { User } from './schemas/user.schema';
+import { Role } from 'src/role/schemas/role.schema';
 
 @Controller('users')
 export class UserController {
@@ -93,7 +94,7 @@ export class UserController {
     return this.userService.unassignUserRole(userId, roleId);
   }
   @ApiTags('User Management')
-  @ApiOperation({ summary: 'Delete a specific User' })
+  @ApiOperation({ summary: 'Suspend a User' })
   @Delete(':userId/temporary')
   async deleteUser(
     @Param('userId') userId: string,
@@ -105,5 +106,12 @@ export class UserController {
   @Get('deleted/users')
   async findDeletedUsers(): Promise<User[]> {
     return this.userService.displayDeletedUsers();
+  }
+
+  @ApiTags('User Management')
+  @ApiOperation({ summary: 'Restore Suspended User' })
+  @Post(':userId/restore')
+  async restoreUser(@Param('userId') userId: string): Promise<User> {
+    return this.userService.restoreDeletedUsers(userId);
   }
 }

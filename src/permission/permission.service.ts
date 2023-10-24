@@ -130,4 +130,20 @@ export class PermissionService {
     const permissions = await this.permissionModel.find({ isDeleted: true });
     return permissions;
   }
+
+  async restoreSuspendedPermission(permId: string): Promise<Permission> {
+    const permissionToRestore = await this.permissionModel.findById(permId);
+
+    if (!permissionToRestore) {
+      throw new NotFoundException('Permission Not Found');
+    }
+    if (!permissionToRestore.isDeleted) {
+      throw new BadRequestException('Permission was not been deleted');
+    }
+    permissionToRestore.isDeleted = false;
+
+    await permissionToRestore.save();
+
+    return permissionToRestore;
+  }
 }

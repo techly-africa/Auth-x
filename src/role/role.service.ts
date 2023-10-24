@@ -204,4 +204,19 @@ export class RoleService {
     const suspendedRoles = await this.rolesModel.find({ isDeleted: true });
     return suspendedRoles;
   }
+
+  async restoreSuspendedRole(roleId: string): Promise<Role> {
+    const role = await this.rolesModel.findById(roleId);
+
+    if (!role) {
+      throw new NotFoundException('Role Not Found');
+    }
+    if (!role.isDeleted) {
+      throw new BadRequestException('Role is temporarily deleted');
+    }
+    role.isDeleted = false;
+    await role.save();
+
+    return role;
+  }
 }

@@ -214,5 +214,18 @@ export class UserService {
     return deletedUsers;
   }
 
-  
+  async restoreDeletedUsers(userId: string): Promise<User> {
+    const userToBeRestored = await this.userModel.findById(userId);
+    if (!userToBeRestored) {
+      throw new NotFoundException('User Not Found');
+    }
+    if (!userToBeRestored.isDeleted) {
+      throw new BadRequestException('User was not been deleted');
+    }
+
+    userToBeRestored.isDeleted = false;
+    userToBeRestored.save();
+
+    return userToBeRestored;
+  }
 }
