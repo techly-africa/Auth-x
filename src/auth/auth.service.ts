@@ -48,7 +48,7 @@ export class AuthService {
       throw new BadRequestException('Please verify your Email');
     }
 
-    if (!existUser.isDeleted) {
+    if (existUser.isDeleted) {
       throw new BadRequestException('User is Suspended');
     }
     const token = this.jwtServices.sign({
