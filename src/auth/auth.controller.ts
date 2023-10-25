@@ -41,7 +41,7 @@ export class AuthController {
     return this.authService.verifyUserToken(token);
   }
 
-  @Get('auth/google')
+  @Get('/google')
   @UseGuards(AuthGuard('google'))
   async googleAuth() {}
 
@@ -50,12 +50,28 @@ export class AuthController {
   async googleAuthRedirect(@Req() req, @Res() res: Response) {
     const tokenPayload = {
       id: req.user._id,
-      name: req.user.name, // Add the user's name to the payload
-      roles: req.user.roles, // Add user roles to the payload if available
+      name: req.user.name,
+      roles: req.user.roles,
     };
 
     const token = this.jwtService.sign(tokenPayload);
     res.cookie('token', token, { httpOnly: true });
     res.send('Google Login Successful ! Welcome ' + req.user.name);
+  }
+  @Get('/github')
+  @UseGuards(AuthGuard('github'))
+  async githubAuth() {}
+
+  @Get('github/callback')
+  @UseGuards(AuthGuard('github'))
+  async githubAuthRedirect(@Req() req, @Res() res: Response) {
+    const tokenPayload = {
+      id: req.user._id,
+      name: req.user.name,
+      roles: req.user.roles,
+    };
+    const token = this.jwtService.sign(tokenPayload);
+    res.cookie('token', token, { httpOnly: true });
+    res.send('Login  with GItthub Successful ! Welcome ' + req.user.name);
   }
 }

@@ -8,6 +8,7 @@ import { ConfigService } from '@nestjs/config';
 import { config } from 'process';
 import { JwtModule } from '@nestjs/jwt';
 import { GoogleStrategy } from './Strategies/google.strategy';
+import { GIthubStrategy } from './Strategies/github.strategy';
 
 @Module({
   imports: [
@@ -26,6 +27,6 @@ import { GoogleStrategy } from './Strategies/google.strategy';
     MongooseModule.forFeature([{ name: User.name, schema: userSchema }]),
   ],
   controllers: [AuthController],
-  providers: [AuthService, GoogleStrategy],
+  providers: [AuthService, GoogleStrategy, GIthubStrategy],
 })
 export class AuthModule {}
