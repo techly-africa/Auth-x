@@ -15,6 +15,7 @@ import { ConfigService } from '@nestjs/config';
 import { v4 as uuidv4 } from 'uuid';
 import { MailService } from '../mail/mail.service';
 import { Role } from '../role/schemas/role.schema';
+import { Request } from 'express';
 
 @Injectable()
 export class UserService {
@@ -24,7 +25,7 @@ export class UserService {
     private mailerServices: MailService,
     @InjectModel(Role.name)
     private roleModel: Model<Role>,
-  ) {}
+  ) { }
 
   async create(createUserDto: CreateUserDto): Promise<{ message: string }> {
     const { name, email, password, gender } = createUserDto;
@@ -43,6 +44,7 @@ export class UserService {
         role: 2,
         isVerified: false,
         verificationToken,
+        mfa_enabled: false,
       });
 
       await this.mailerServices.sendUserEmail(
@@ -227,5 +229,40 @@ export class UserService {
     userToBeRestored.save();
 
     return userToBeRestored;
+  }
+  async enable2FA(req: Request): Promise<User> {
+    try {
+      const userDetails = req['user'];
+      console.log('u', userDetails)
+      const user = await this.userModel.findById(userDetails.id);
+      if (!user) {
+        throw new NotFoundException(`User not found`);
+      }
+      user.mfa_enabled = true;
+      await user.save();
+      return user;
+    } catch (error) {
+      console.log(error)
+      throw new InternalServerErrorException('Server error', error.message);
+    }
+  }
+  async disable2FA(req: Request): Promise<User> {
+    try {
+      const userDetails = req['user'];
+      const user = await this.userModel.findById({
+        _id: userDetails._id,
+      });
+      if (!user) {
+        throw new NotFoundException(`User not found`);
+      }
+      user.mfa_enabled = false;
+      user.mfa_code = null;
+      user.mfa_timeout = null;
+      await user.save();
+
+      return user;
+    } catch (error) {
+      throw new InternalServerErrorException('Server error', error.message);
+    }
   }
 }

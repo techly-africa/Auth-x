@@ -3,7 +3,7 @@ import { MailerService } from '@nestjs-modules/mailer';
 import { use } from 'passport';
 @Injectable()
 export class MailService {
-  constructor(private mailerService: MailerService) {}
+  constructor(private mailerService: MailerService) { }
 
   async sendUserEmail(user: string, verificationToken: string, email: string) {
     try {
@@ -33,5 +33,13 @@ export class MailService {
     } catch (error) {
       console.error('Error sending email:', error);
     }
+  }
+  async sendUserOtp(mfa_code: string, email: string) {
+    await this.mailerService.sendMail({
+      to: email,
+      from: '"Techly Africa Support Team" <support@example.com>',
+      subject: 'Techly Account Verification',
+      text: `Hi ${email},\n\nWelcome to Techly Africa! Here is your otpcode ${mfa_code}. Use it to login into your account`,
+    });
   }
 }

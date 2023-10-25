@@ -13,13 +13,15 @@ import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ObjectId } from 'mongoose';
-import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { User } from './schemas/user.schema';
 import { Role } from 'src/role/schemas/role.schema';
+import { Request } from 'express';
+import { UserGuard } from 'src/auth/Guards/user.guard';
 
 @Controller('users')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(private readonly userService: UserService) { }
   @ApiTags('User Management')
   @ApiOperation({ summary: 'Create a user' })
   @Post()
@@ -113,5 +115,21 @@ export class UserController {
   @Post(':userId/restore')
   async restoreUser(@Param('userId') userId: string): Promise<User> {
     return this.userService.restoreDeletedUsers(userId);
+  }
+  @ApiTags('User Management')
+  @UseGuards(UserGuard)
+  @ApiOperation({ summary: 'Enable 2FA for a user' })
+  @Post('/enable-2fa')
+  @ApiBearerAuth()
+  async enable2FA(@Req() request: Request) {
+    return this.userService.enable2FA(request);
+  }
+  @ApiTags('User Management')
+  @UseGuards(UserGuard)
+  @ApiOperation({ summary: 'Disable 2FA for a user' })
+  @ApiBearerAuth()
+  @Post('/disable-2fa')
+  async disable2FA(@Req() request: Request) {
+    return this.userService.disable2FA(request);
   }
 }

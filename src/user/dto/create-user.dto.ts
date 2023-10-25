@@ -1,6 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
-import { appendFile } from 'fs';
+import { IsNotEmpty } from 'class-validator';
 
 export class CreateUserDto {
   @ApiProperty()
@@ -23,4 +22,7 @@ export class CreateUserDto {
   gender?: string;
   verificationToken?: string;
   isVerified?: boolean;
+  mfa_enabled?: boolean;
+  mfa_code?: number;
+  mfa_timeout?: Date;
 }

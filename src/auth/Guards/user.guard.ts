@@ -22,12 +22,14 @@ export class UserGuard implements CanActivate {
       const payload = await this.jwtService.verifyAsync(token, {
         secret: process.env.JWT_SECRET,
       });
+      console.log(payload.role)
 
       if (payload.role !== 2) {
         throw new UnauthorizedException('Insufficient permissions');
       }
       request['user'] = payload;
-    } catch {
+    } catch (e) {
+      console.log(e);
       throw new UnauthorizedException();
     }
     return true;

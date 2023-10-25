@@ -10,6 +10,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { GoogleStrategy } from './Strategies/google.strategy';
 import { GIthubStrategy } from './Strategies/github.strategy';
 import { FacebookStrategy } from './Strategies/facebook.strategy';
+import { MailModule } from 'src/mail/mail.module';
 
 @Module({
   imports: [
@@ -26,8 +27,9 @@ import { FacebookStrategy } from './Strategies/facebook.strategy';
       },
     }),
     MongooseModule.forFeature([{ name: User.name, schema: userSchema }]),
+    MailModule
   ],
   controllers: [AuthController],
   providers: [AuthService, GoogleStrategy, GIthubStrategy, FacebookStrategy],
 })
-export class AuthModule {}
+export class AuthModule { }
