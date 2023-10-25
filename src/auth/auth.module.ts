@@ -9,6 +9,7 @@ import { config } from 'process';
 import { JwtModule } from '@nestjs/jwt';
 import { GoogleStrategy } from './Strategies/google.strategy';
 import { GIthubStrategy } from './Strategies/github.strategy';
+import { FacebookStrategy } from './Strategies/facebook.strategy';
 
 @Module({
   imports: [
@@ -27,6 +28,6 @@ import { GIthubStrategy } from './Strategies/github.strategy';
     MongooseModule.forFeature([{ name: User.name, schema: userSchema }]),
   ],
   controllers: [AuthController],
-  providers: [AuthService, GoogleStrategy, GIthubStrategy],
+  providers: [AuthService, GoogleStrategy, GIthubStrategy, FacebookStrategy],
 })
 export class AuthModule {}

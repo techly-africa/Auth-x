@@ -41,10 +41,6 @@ export class AuthController {
     return this.authService.verifyUserToken(token);
   }
 
-  @Get('/google')
-  @UseGuards(AuthGuard('google'))
-  async googleAuth() {}
-
   @Get('google/callback')
   @UseGuards(AuthGuard('google'))
   async googleAuthRedirect(@Req() req, @Res() res: Response) {
@@ -58,9 +54,6 @@ export class AuthController {
     res.cookie('token', token, { httpOnly: true });
     res.send('Google Login Successful ! Welcome ' + req.user.name);
   }
-  @Get('/github')
-  @UseGuards(AuthGuard('github'))
-  async githubAuth() {}
 
   @Get('github/callback')
   @UseGuards(AuthGuard('github'))
@@ -73,5 +66,18 @@ export class AuthController {
     const token = this.jwtService.sign(tokenPayload);
     res.cookie('token', token, { httpOnly: true });
     res.send('Login  with GItthub Successful ! Welcome ' + req.user.name);
+  }
+
+  @Get('facebook/callback')
+  @UseGuards(AuthGuard('facebook'))
+  async facebookAuthRedirect(@Req() req, @Res() res: Response) {
+    const tokenPayload = {
+      id: req.user._id,
+      name: req.user.name,
+      roles: req.user.roles,
+    };
+    const token = this.jwtService.sign(tokenPayload);
+    res.cookie('token', token, { httpOnly: true });
+    res.send('Login  with Facebook Successful ! Welcome ' + req.user.name);
   }
 }
