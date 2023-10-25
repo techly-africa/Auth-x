@@ -48,7 +48,14 @@ export class AuthController {
   @Get('google/callback')
   @UseGuards(AuthGuard('google'))
   async googleAuthRedirect(@Req() req, @Res() res: Response) {
-    const token = this.jwtService.sign({ id: req.user._id });
+    const tokenPayload = {
+      id: req.user._id,
+      name: req.user.name, // Add the user's name to the payload
+      roles: req.user.roles, // Add user roles to the payload if available
+    };
+
+    const token = this.jwtService.sign(tokenPayload);
+    res.cookie('token', token, { httpOnly: true });
     res.send('Google Login Successful ! Welcome ' + req.user.name);
   }
 }
