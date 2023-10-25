@@ -10,9 +10,9 @@ export class FacebookStrategy extends PassportStrategy(Strategy, 'facebook') {
   constructor(@InjectModel(User.name) private userModel: Model<User>) {
     super(
       {
-        clientID: '290802907109891',
-        clientSecret: '28753507dfe7105346ab62de669de70f',
-        callbackURL: 'http://localhost:3000/auth/facebook/callback',
+        clientID: process.env.FACEBOOK_CLIENT_ID,
+        clientSecret: process.env.FACEBOOK_SECRET_KEY,
+        callbackURL: process.env.FACEBOOK_CALLBACK_URL,
       },
       async (
         accessToken: string,

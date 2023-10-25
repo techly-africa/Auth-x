@@ -65,7 +65,7 @@ export class AuthController {
     };
     const token = this.jwtService.sign(tokenPayload);
     res.cookie('token', token, { httpOnly: true });
-    res.send('Login  with GItthub Successful ! Welcome ' + req.user.name);
+    res.send('Login  with GIthub Successful ! Welcome ' + req.user.name);
   }
 
   @Get('facebook/callback')

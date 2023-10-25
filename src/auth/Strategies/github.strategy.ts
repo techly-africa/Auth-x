@@ -10,9 +10,9 @@ export class GIthubStrategy extends PassportStrategy(Strategy, 'github') {
   constructor(@InjectModel(User.name) private userModel: Model<User>) {
     super(
       {
-        clientID: '3fbf4b3b08bf22ad930b',
-        clientSecret: '7483df51f0cd132f782841df7eb577df169ba947',
-        callbackURL: 'http://localhost:3000/auth/github/callback',
+        clientID: process.env.GITHUB_CLIENT_ID,
+        clientSecret: process.env.GITHUB_SECRET_KEY,
+        callbackURL: process.env.GITHUB_CALLBACK_URL,
       },
       async (
         accessToken: string,
