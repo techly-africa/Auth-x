@@ -3,15 +3,16 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import { Request } from 'express';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User } from '../user/schemas/user.schema';
 import { LoginUserDto } from './login-user.dto';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
-import { generateOTP } from 'src/user/utils/codeGenerator';
-import { getExpiry } from 'src/user/utils/dateUtility';
-import { MailService } from 'src/mail/mail.service';
+import { generateOTP } from '../user/utils/codeGenerator';
+import { getExpiry, isTokenExpired } from '../user/utils/dateUtility';
+import { MailService } from '../mail/mail.service';
 
 @Injectable()
 export class AuthService {
@@ -42,7 +43,6 @@ export class AuthService {
     if (!existUser) {
       throw new BadRequestException('Invalid Credentials');
     }
-    console.log(existUser)
 
     const passwordMatch = await bcrypt.compare(password, existUser.password);
     if (!passwordMatch) {
@@ -67,10 +67,17 @@ export class AuthService {
         message: `Welcome, ${existUser.name}! Your login was successful, and we're thrilled to have you join our community.`,
       };
     }
+    console.log('existUser1', existUser)
     const otp = generateOTP(6);
-    existUser.mfa_code = otp;
-    existUser.mfa_timeout = getExpiry();
-    await existUser.save();
+    console.log('otp', otp)
+    await existUser.update({
+      mfa_code: otp,
+      mfa_timeout: getExpiry()
+    })
+    // existUser.mfa_code = otp;
+    // existUser.mfa_timeout = getExpiry();
+    console.log('existUser2', existUser)
+    // await existUser.save();
     await this.mailerServices.sendUserOtp(otp, existUser.email);
     return { message: 'OTP sent to your email' };
   }
@@ -86,6 +93,25 @@ export class AuthService {
 
     return {
       message: 'Email Verification Successful',
+    };
+  }
+  async verifyLogin(otp: string): Promise<{ token: string; message: string }> {
+    const user = await this.userModel.findOne({ mfa_code: otp });
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+    const isExpired = isTokenExpired(user.mfa_timeout);
+    if (isExpired) {
+      throw new BadRequestException('OTP has expired');
+    }
+    const token = this.jwtServices.sign({
+      id: user._id,
+      name: user.name,
+      role: user.role,
+    });
+    return {
+      token: token,
+      message: `Welcome, ${user.name}! Your login was successful, and we're thrilled to have you join our community.`,
     };
   }
 }

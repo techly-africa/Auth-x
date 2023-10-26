@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { PassportStrategy } from '@nestjs/passport';
 import { Model } from 'mongoose';
 import { Strategy } from 'passport-google-oauth2';
-import { User } from 'src/user/schemas/user.schema';
+import { User } from '../../user/schemas/user.schema';
 
 @Injectable()
 export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {

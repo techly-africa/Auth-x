@@ -233,7 +233,6 @@ export class UserService {
   async enable2FA(req: Request): Promise<User> {
     try {
       const userDetails = req['user'];
-      console.log('u', userDetails)
       const user = await this.userModel.findById(userDetails.id);
       if (!user) {
         throw new NotFoundException(`User not found`);

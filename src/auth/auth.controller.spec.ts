@@ -4,6 +4,8 @@ import { AuthService } from './auth.service';
 import { LoginUserDto } from './login-user.dto';
 import { LoginUserValidationPipe } from './Validations/login-user-validation.pipe';
 import { ArgumentMetadata, BadRequestException } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
+import { Response } from 'express';
 
 describe('AuthController', () => {
     let authController: AuthController;
@@ -13,6 +15,15 @@ describe('AuthController', () => {
     const mockAuthService = {
         loginUser: jest.fn(),
         verifyUserToken: jest.fn(),
+        verifyLogin: jest.fn(),
+    };
+    const mockResponse: Response = {
+        cookie: jest.fn(),
+        send: jest.fn(),
+        // Add any other necessary properties here
+    } as unknown as Response;
+    const jwtServiceMock = {
+        sign: jest.fn(),
     };
 
     beforeEach(async () => {
@@ -23,6 +34,11 @@ describe('AuthController', () => {
                     provide: AuthService,
                     useValue: mockAuthService,
                 },
+                {
+                    provide: JwtService,
+                    useValue: jwtServiceMock,
+                },
+
             ],
         }).compile();
         pipe = new LoginUserValidationPipe();
@@ -48,9 +64,15 @@ describe('AuthController', () => {
         it('should verify the email', async () => {
             const mockToken = 'someToken';
             mockAuthService.verifyUserToken.mockResolvedValueOnce({ message: 'Email Verification Successful' });
-            const result = await authController.verifyEmail(mockToken);
+            const result = await authController.verifyLogin(mockToken);
             expect(result).toEqual({ message: 'Email Verification Successful' });
             expect(mockAuthService.verifyUserToken).toHaveBeenCalledWith(mockToken);
+        });
+        it('should call authService.verifyLogin with the provided OTP', async () => {
+            const mockOTP = '123456';
+            await authController.verifyEmail(mockOTP);
+
+            expect(mockAuthService.verifyLogin).toHaveBeenCalledWith(mockOTP);
         });
     });
 
@@ -77,6 +99,55 @@ describe('AuthController', () => {
 
             expect(result1).toEqual(mockValue1);
             expect(result2).toEqual(mockValue2);
+        });
+        it('should call authService.verifyUserToken with the provided token', async () => {
+            const mockToken = 'mockToken';
+            await authController.verifyLogin(mockToken);
+
+            expect(mockAuthService.verifyUserToken).toHaveBeenCalledWith(mockToken);
+        });
+
+        it('should return the result of verifyUserToken', async () => {
+            const mockToken = 'mockToken';
+            const expectedResult = { message: 'Token verified' };
+            mockAuthService.verifyUserToken.mockResolvedValue(expectedResult);
+
+            const result = await authController.verifyLogin(mockToken);
+
+            expect(result).toEqual(expectedResult);
+        });
+    });
+
+    describe('googleAuthRedirect', () => {
+        it('should call jwtService.sign with correct token payload', async () => {
+            const mockRequest = { user: { _id: 'mockId', name: 'John Doe', roles: ['user'] } };
+            jwtServiceMock.sign.mockReturnValue('mockToken');
+
+            await authController.googleAuthRedirect(mockRequest, mockResponse);
+
+            expect(jwtServiceMock.sign).toHaveBeenCalledWith({
+                id: 'mockId',
+                name: 'John Doe',
+                roles: ['user'],
+            });
+        });
+
+        it('should set a cookie with the token', async () => {
+            const mockRequest = { user: { _id: 'mockId', name: 'John Doe', roles: ['user'] } };
+            jwtServiceMock.sign.mockReturnValue('mockToken');
+
+            await authController.googleAuthRedirect(mockRequest, mockResponse);
+
+            expect(mockResponse.cookie).toHaveBeenCalledWith('token', 'mockToken', { httpOnly: true });
+        });
+
+        it('should send a welcome message', async () => {
+            const mockRequest = { user: { _id: 'mockId', name: 'John Doe', roles: ['user'] } };
+            jwtServiceMock.sign.mockReturnValue('mockToken');
+
+            await authController.googleAuthRedirect(mockRequest, mockResponse);
+
+            expect(mockResponse.send).toHaveBeenCalledWith('Google Login Successful ! Welcome John Doe');
         });
     });
 });

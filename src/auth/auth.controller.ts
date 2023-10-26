@@ -33,11 +33,16 @@ export class AuthController {
   ): Promise<{ token?: string }> {
     return this.authService.loginUser(user);
   }
+  @Get('/otp/verify/:token')
+  @ApiOperation({ summary: 'Otp validation' })
+  async verifyLogin(@Param('token') token: string) {
+    return await this.authService.verifyUserToken(token);
+  }
 
-  @Get('verify/:token')
-  @ApiOperation({ summary: 'Verify user token on signUp' })
-  async verifyEmail(@Param('token') token: string) {
-    return this.authService.verifyUserToken(token);
+  @Get('/mfa/:otp')
+  @ApiOperation({ summary: 'Two factor authentication login' })
+  async verifyEmail(@Param('otp') otp: string) {
+    return this.authService.verifyLogin(otp);
   }
 
   @Get('google/callback')

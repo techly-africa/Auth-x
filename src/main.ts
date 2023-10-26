@@ -13,7 +13,15 @@ async function bootstrap() {
     )
     .setVersion('1.0')
     .addBearerAuth()
-    .addOAuth2()
+    .addOAuth2({
+      type: 'oauth2',
+      flows: {
+        authorizationCode: {
+          authorizationUrl: process.env.GOOGLE_SERVER,
+          scopes: [],
+        },
+      },
+    })
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);

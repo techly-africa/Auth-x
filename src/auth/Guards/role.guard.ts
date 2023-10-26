@@ -5,7 +5,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { ObjectId, Types } from 'mongoose';
+import { Types } from 'mongoose';
 import { Role } from '../../role/schemas/role.schema';
 import { UserService } from '../../user/user.service';
 import { InjectModel } from '@nestjs/mongoose';

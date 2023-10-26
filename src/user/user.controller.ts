@@ -17,7 +17,7 @@ import { ApiBearerAuth, ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { User } from './schemas/user.schema';
 import { Role } from 'src/role/schemas/role.schema';
 import { Request } from 'express';
-import { UserGuard } from 'src/auth/Guards/user.guard';
+import { UserGuard } from '../auth/Guards/user.guard';
 
 @Controller('users')
 export class UserController {
