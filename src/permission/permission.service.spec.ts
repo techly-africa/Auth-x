@@ -4,6 +4,7 @@ import { PermissionService } from './permission.service';
 import {
     BadRequestException,
     InternalServerErrorException,
+    NotFoundException,
 } from '@nestjs/common';
 import { CreatePermDto } from './DTO/create-perm.dto';
 import { UpdatePermDto } from './DTO/update-perm.dto';
@@ -261,6 +262,93 @@ describe('PermissionService', () => {
             await expect(
                 permissionService.deletePermission(permissionId),
             ).rejects.toThrow(InternalServerErrorException);
+        });
+    });
+    describe('temporarilySuspendPermission', () => {
+        it('should temporarily suspend a permission', async () => {
+            const permId = 'perm-id';
+
+            const permission = {
+                _id: permId,
+                name: 'Some Permission',
+                isDeleted: false,
+                save: jest.fn(),
+            };
+
+            mockPermissionModel.findById.mockReturnValue(permission);
+
+            const result = await permissionService.temporarilySuspendPermission(permId);
+
+            expect(result).toEqual({ message: 'Permission Deleted Temporarily' });
+            expect(permission.isDeleted).toBe(true);
+            expect(permission.save).toHaveBeenCalled();
+        });
+
+        it('should throw BadRequestException if permission does not exist', async () => {
+            const permId = 'non-existent-perm-id';
+
+            mockPermissionModel.findById.mockReturnValue(null);
+
+            await expect(permissionService.temporarilySuspendPermission(permId)).rejects.toThrow(BadRequestException);
+        });
+    });
+
+    describe('displaySuspendendPermissions', () => {
+        it('should return a list of suspended permissions', async () => {
+            const suspendedPermissions = [
+                { name: 'Permission 1', isDeleted: true },
+                { name: 'Permission 2', isDeleted: true },
+            ];
+
+            mockPermissionModel.find.mockReturnValue(suspendedPermissions);
+
+            const result = await permissionService.displaySuspendendPermissions();
+
+            expect(result).toEqual(suspendedPermissions);
+            expect(mockPermissionModel.find).toHaveBeenCalledWith({ isDeleted: true });
+        });
+    });
+
+    describe('restoreSuspendedPermission', () => {
+        it('should restore a suspended permission', async () => {
+            const permId = 'perm-id';
+
+            const permission = {
+                _id: permId,
+                name: 'Some Permission',
+                isDeleted: true,
+                save: jest.fn(),
+            };
+
+            mockPermissionModel.findById.mockReturnValue(permission);
+
+            const result = await permissionService.restoreSuspendedPermission(permId);
+
+            expect(result).toEqual(permission);
+            expect(permission.isDeleted).toBe(false);
+            expect(permission.save).toHaveBeenCalled();
+        });
+
+        it('should throw NotFoundException if permission does not exist', async () => {
+            const permId = 'non-existent-perm-id';
+
+            mockPermissionModel.findById.mockReturnValue(null);
+
+            await expect(permissionService.restoreSuspendedPermission(permId)).rejects.toThrow(NotFoundException);
+        });
+
+        it('should throw BadRequestException if permission is not suspended', async () => {
+            const permId = 'perm-id';
+
+            const permission = {
+                _id: permId,
+                name: 'Some Permission',
+                isDeleted: false,
+            };
+
+            mockPermissionModel.findById.mockReturnValue(permission);
+
+            await expect(permissionService.restoreSuspendedPermission(permId)).rejects.toThrow(BadRequestException);
         });
     });
 });

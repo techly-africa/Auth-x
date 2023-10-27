@@ -1,20 +1,30 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { UnauthorizedException } from '@nestjs/common';
 import { RoleCheckGuard } from './role.guard';
+import { UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from '../../user/user.service';
-import { Model } from 'mongoose';
-import { Role } from '../../role/schemas/role.schema';
 import { getModelToken } from '@nestjs/mongoose';
+import { Role } from '../../role/schemas/role.schema';
+
+class JwtServiceMock {
+    verifyAsync() {
+        return { id: 'some-user-id' };
+    }
+}
+class UserServiceMock {
+    findOne(id: string) {
+        if (id === 'some-user-id') {
+            return { roles: ['role-id-1'] };
+        }
+        return null;
+    }
+}
+class RoleModelMock {
+    static find = jest.fn().mockResolvedValue([{ roleName: 'Super Admin' }])
+}
 
 describe('RoleCheckGuard', () => {
     let guard: RoleCheckGuard;
-    let jwtService: JwtService;
-    let userService: UserService;
-    let roleModel: Model<Role>;
-    const userModelMock = {
-        findById: jest.fn(),
-    };
 
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
@@ -22,39 +32,68 @@ describe('RoleCheckGuard', () => {
                 RoleCheckGuard,
                 {
                     provide: JwtService,
-                    useValue: {
-                        verifyAsync: jest.fn(),
-                    },
+                    useClass: JwtServiceMock,
                 },
                 {
                     provide: UserService,
-                    useValue: userModelMock,
+                    useClass: UserServiceMock,
                 },
                 {
                     provide: getModelToken(Role.name),
-                    useValue: {
-                        find: jest.fn(),
-                    },
+                    useValue: RoleModelMock,
                 },
             ],
         }).compile();
 
         guard = module.get<RoleCheckGuard>(RoleCheckGuard);
-        jwtService = module.get<JwtService>(JwtService);
-        userService = module.get<UserService>(UserService);
-        roleModel = module.get<Model<Role>>(getModelToken(Role.name));
     });
 
     it('should be defined', () => {
         expect(guard).toBeDefined();
     });
 
-    it('should throw UnauthorizedException for unauthorized user', async () => {
-        const mockUserRoles = [{ roleName: 'User' }];
-        const mockUser = { roles: mockUserRoles };
-        const mockToken = 'mockToken';
-        jest.spyOn(jwtService, 'verifyAsync').mockResolvedValue({ id: 'mockUserId' });
-        jest.spyOn(roleModel, 'find').mockResolvedValue(mockUserRoles);
-        await expect(guard.canActivate({ switchToHttp: () => ({ getRequest: () => ({ headers: { authorization: `Bearer ${mockToken}` } }) }) } as any)).rejects.toThrow(UnauthorizedException);
+    it('should return true for a user with required role', async () => {
+        const context = {
+            switchToHttp: jest.fn().mockReturnValue({
+                getRequest: jest.fn().mockReturnValue({
+                    headers: { authorization: 'Bearer some-token' },
+                }),
+            }),
+        };
+
+        const result = await guard.canActivate(context as any);
+        expect(result).toBe(true);
+    });
+
+    it('should throw UnauthorizedException if token is not provided', async () => {
+        const context = {
+            switchToHttp: jest.fn().mockReturnValue({
+                getRequest: jest.fn().mockReturnValue({
+                    headers: {},
+                }),
+            }),
+        };
+
+        await expect(guard.canActivate(context as any)).rejects.toThrow(
+            UnauthorizedException,
+        );
+    });
+
+
+
+    it('should throw UnauthorizedException if user does not have required role', async () => {
+        const context = {
+            switchToHttp: jest.fn().mockReturnValue({
+                getRequest: jest.fn().mockReturnValue({
+                    headers: { authorization: 'Bearer some-token' },
+                }),
+            }),
+        };
+
+        RoleModelMock.find.mockResolvedValue([{ roleName: 'User' }]);
+
+        await expect(guard.canActivate(context as any)).rejects.toThrow(
+            UnauthorizedException,
+        );
     });
 });

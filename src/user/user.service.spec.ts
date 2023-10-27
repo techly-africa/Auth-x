@@ -8,6 +8,7 @@ import { getMockReq, getMockRes } from '@jest-mock/express'
 import { BadRequestException, InternalServerErrorException, NotFoundException, ConflictException } from '@nestjs/common';
 import { Types } from 'mongoose';
 import { Request } from 'express';
+import { createMock } from '@golevelup/ts-jest';
 
 const userModelMock = {
     create: jest.fn(),
@@ -16,7 +17,9 @@ const userModelMock = {
     findByIdAndUpdate: jest.fn(),
     findByIdAndDelete: jest.fn(),
 };
-const mockResponse = <Request>{}
+const mockRequest = {
+    user: { id: 'some-user-id', name: "edwin", role: 2, mfa_enabled: false } as any,
+} as Partial<Request>;
 
 const mailerServiceMock = {
     sendUserEmail: jest.fn(),

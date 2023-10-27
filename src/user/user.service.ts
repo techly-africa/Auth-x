@@ -198,7 +198,6 @@ export class UserService {
 
   async deleteUser(userId: string): Promise<{ message: string }> {
     const user = await this.userModel.findById(userId);
-
     if (!user) {
       throw new NotFoundException('User Not Found');
     }
@@ -230,7 +229,7 @@ export class UserService {
 
     return userToBeRestored;
   }
-  async enable2FA(req: Request): Promise<User> {
+  async enable2FA(req: Request): Promise<{ message: string }> {
     try {
       const userDetails = req['user'];
       const user = await this.userModel.findById(userDetails.id);
@@ -239,18 +238,17 @@ export class UserService {
       }
       user.mfa_enabled = true;
       await user.save();
-      return user;
+      return {
+        message: 'Two factor authentication enabled successfully',
+      };
     } catch (error) {
-      console.log(error)
       throw new InternalServerErrorException('Server error', error.message);
     }
   }
-  async disable2FA(req: Request): Promise<User> {
+  async disable2FA(req: Request): Promise<{ message: string }> {
     try {
       const userDetails = req['user'];
-      const user = await this.userModel.findById({
-        _id: userDetails._id,
-      });
+      const user = await this.userModel.findById(userDetails.id);
       if (!user) {
         throw new NotFoundException(`User not found`);
       }
@@ -258,8 +256,9 @@ export class UserService {
       user.mfa_code = null;
       user.mfa_timeout = null;
       await user.save();
-
-      return user;
+      return {
+        message: 'Two factor authentication disabled successfully',
+      };
     } catch (error) {
       throw new InternalServerErrorException('Server error', error.message);
     }

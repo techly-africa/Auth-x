@@ -67,17 +67,10 @@ export class AuthService {
         message: `Welcome, ${existUser.name}! Your login was successful, and we're thrilled to have you join our community.`,
       };
     }
-    console.log('existUser1', existUser)
     const otp = generateOTP(6);
-    console.log('otp', otp)
-    await existUser.update({
-      mfa_code: otp,
-      mfa_timeout: getExpiry()
-    })
-    // existUser.mfa_code = otp;
-    // existUser.mfa_timeout = getExpiry();
-    console.log('existUser2', existUser)
-    // await existUser.save();
+    existUser.mfa_code = otp;
+    existUser.mfa_timeout = getExpiry();
+    await existUser.save();
     await this.mailerServices.sendUserOtp(otp, existUser.email);
     return { message: 'OTP sent to your email' };
   }

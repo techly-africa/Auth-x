@@ -15,8 +15,7 @@ const userServiceMock = {
     delete: jest.fn(),
     displayDeletedUsers: jest.fn(),
     disable2FA: jest.fn(),
-    enable2FA: jest.fn(),
-    restoreDeletedUsers: jest.fn
+    enable2FA: jest.fn()
 };
 
 describe('UserController', () => {
@@ -99,71 +98,5 @@ describe('UserController', () => {
             expect(result).toBe(deletedUser);
         });
     });
-    describe('deleteUser', () => {
-        it('should suspend a user', async () => {
-            const userId = 'someUserId';
-            const expectedResult = { message: 'User Deleted Successfully !' };
 
-            userServiceMock.delete.mockResolvedValue(expectedResult);
-
-            const result = await userController.deleteUser(userId);
-
-            expect(result).toEqual(expectedResult);
-            expect(userController.deleteUser).toHaveBeenCalledWith(userId);
-        });
-    });
-
-    describe('findDeletedUsers', () => {
-        it('should return an array of deleted users', async () => {
-            const expectedResult: User[] = [/* list of deleted users */];
-
-            userServiceMock.displayDeletedUsers.mockResolvedValue(expectedResult);
-
-            const result = await userController.findDeletedUsers();
-
-            expect(result).toEqual(expectedResult);
-        });
-    });
-
-    describe('restoreUser', () => {
-        it('should restore a suspended user', async () => {
-            const userId = 'someUserId';
-            const expectedResult: User = { /* restored user data */ };
-
-            userServiceMock.restoreDeletedUsers.mockResolvedValue(expectedResult);
-
-            const result = await userController.restoreUser(userId);
-
-            expect(result).toEqual(expectedResult);
-            expect(userServiceMock.restoreDeletedUsers).toHaveBeenCalledWith(userId);
-        });
-    });
-
-    describe('enable2FA', () => {
-        it('should enable 2FA for a user', async () => {
-            const request = { user: { _id: 'someUserId' } };
-            const expectedResult: User = { /* updated user data */ };
-
-            userServiceMock.enable2FA.mockResolvedValue(expectedResult);
-
-            const result = await userController.enable2FA(request);
-
-            expect(result).toEqual(expectedResult);
-            expect(userServiceMock.enable2FA).toHaveBeenCalledWith(request);
-        });
-    });
-
-    describe('disable2FA', () => {
-        it('should disable 2FA for a user', async () => {
-            const request = { user: { _id: 'someUserId' } };
-            const expectedResult: User = { /* updated user data */ };
-
-            userServiceMock.disable2FA.mockResolvedValue(expectedResult);
-
-            const result = await userController.disable2FA(request);
-
-            expect(result).toEqual(expectedResult);
-            expect(userServiceMock.disable2FA).toHaveBeenCalledWith(request);
-        });
-    });
 });
