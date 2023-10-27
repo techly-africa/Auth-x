@@ -13,7 +13,6 @@ import { AuthService } from './auth.service';
 import { LoginUserDto } from './login-user.dto';
 import { LoginUserValidationPipe } from './Validations/login-user-validation.pipe';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
-import * as cookie from 'cookie';
 import { AuthGuard } from '@nestjs/passport';
 import { JwtService } from '@nestjs/jwt';
 import { Response } from 'express';
@@ -23,7 +22,7 @@ export class AuthController {
   constructor(
     private authService: AuthService,
     private jwtService: JwtService,
-  ) {}
+  ) { }
 
   @ApiOperation({ summary: 'Login a User ' })
   @Post('login')
@@ -31,14 +30,19 @@ export class AuthController {
   async LoginUser(
     @Body()
     user: LoginUserDto,
-  ): Promise<{ token: string }> {
+  ): Promise<{ token?: string }> {
     return this.authService.loginUser(user);
   }
+  @Get('/otp/verify/:token')
+  @ApiOperation({ summary: 'Otp validation' })
+  async verifyLogin(@Param('token') token: string) {
+    return await this.authService.verifyUserToken(token);
+  }
 
-  @Get('verify/:token')
-  @ApiOperation({ summary: 'Verify user token on signUp' })
-  async verifyEmail(@Param('token') token: string) {
-    return this.authService.verifyUserToken(token);
+  @Get('/mfa/:otp')
+  @ApiOperation({ summary: 'Two factor authentication login' })
+  async verifyEmail(@Param('otp') otp: string) {
+    return this.authService.verifyLogin(otp);
   }
 
   @Get('google/callback')

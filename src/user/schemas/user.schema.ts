@@ -43,6 +43,14 @@ export class User extends Document {
     default: false,
   })
   isDeleted: boolean;
+  @Prop({ default: false })
+  mfa_enabled: boolean;
+
+  @Prop()
+  mfa_code: string;
+
+  @Prop()
+  mfa_timeout: Date;
 }
 
 export const userSchema = SchemaFactory.createForClass(User);

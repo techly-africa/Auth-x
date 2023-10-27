@@ -4,8 +4,11 @@ import { getModelToken } from '@nestjs/mongoose';
 import { User } from './schemas/user.schema';
 import { MailService } from '../mail/mail.service';
 import { Role } from '../role/schemas/role.schema';
+import { getMockReq, getMockRes } from '@jest-mock/express'
 import { BadRequestException, InternalServerErrorException, NotFoundException, ConflictException } from '@nestjs/common';
 import { Types } from 'mongoose';
+import { Request } from 'express';
+import { createMock } from '@golevelup/ts-jest';
 
 const userModelMock = {
     create: jest.fn(),
@@ -14,6 +17,9 @@ const userModelMock = {
     findByIdAndUpdate: jest.fn(),
     findByIdAndDelete: jest.fn(),
 };
+const mockRequest = {
+    user: { id: 'some-user-id', name: "edwin", role: 2, mfa_enabled: false } as any,
+} as Partial<Request>;
 
 const mailerServiceMock = {
     sendUserEmail: jest.fn(),
@@ -314,6 +320,85 @@ describe('UserService', () => {
                 expect(error).toBeInstanceOf(BadRequestException);
                 expect(error.message).toBe('User does not exist');
             }
+        });
+    });
+    describe('deleteUser', () => {
+        it('should delete a user and return success message', async () => {
+            const mockUser = {
+                _id: 'someUserId',
+                isDeleted: false,
+                save: jest.fn(),
+            };
+            userModelMock.findById.mockResolvedValue(mockUser);
+
+            const result = await userService.deleteUser('someUserId');
+
+            expect(userModelMock.findById).toHaveBeenCalledWith('someUserId');
+            expect(mockUser.isDeleted).toBe(true);
+            expect(mockUser.save).toHaveBeenCalled();
+            expect(result).toEqual({
+                message: 'User Deleted Successfully !',
+            });
+        });
+
+        it('should throw NotFoundException if user is not found', async () => {
+            userModelMock.findById.mockResolvedValue(null);
+
+            await expect(userService.deleteUser('someUserId')).rejects.toThrowError(
+                NotFoundException,
+            );
+        });
+    });
+
+    describe('displayDeletedUsers', () => {
+        it('should return a list of deleted users', async () => {
+            const mockDeletedUsers = [
+                { _id: '1', name: 'User 1', isDeleted: true },
+                { _id: '2', name: 'User 2', isDeleted: true },
+            ];
+            userModelMock.find.mockResolvedValue(mockDeletedUsers);
+
+            const result = await userService.displayDeletedUsers();
+
+            expect(result).toEqual(mockDeletedUsers);
+        });
+    });
+
+    describe('restoreDeletedUsers', () => {
+        it('should restore a deleted user', async () => {
+            const mockUser = {
+                _id: 'someUserId',
+                isDeleted: true,
+                save: jest.fn(),
+            };
+            userModelMock.findById.mockResolvedValue(mockUser);
+
+            const result = await userService.restoreDeletedUsers('someUserId');
+
+            expect(userModelMock.findById).toHaveBeenCalledWith('someUserId');
+            expect(mockUser.isDeleted).toBe(false);
+            expect(mockUser.save).toHaveBeenCalled();
+            expect(result).toEqual(mockUser);
+        });
+
+        it('should throw NotFoundException if user is not found', async () => {
+            userModelMock.findById.mockResolvedValue(null);
+
+            await expect(
+                userService.restoreDeletedUsers('someUserId'),
+            ).rejects.toThrowError(NotFoundException);
+        });
+
+        it('should throw BadRequestException if user was not deleted', async () => {
+            const mockUser = {
+                _id: 'someUserId',
+                isDeleted: false,
+            };
+            userModelMock.findById.mockResolvedValue(mockUser);
+
+            await expect(
+                userService.restoreDeletedUsers('someUserId'),
+            ).rejects.toThrowError(BadRequestException);
         });
     });
 });

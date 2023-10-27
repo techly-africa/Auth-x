@@ -3,6 +3,8 @@ import { UserController } from './user.controller';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { JwtService } from '@nestjs/jwt';
+import { User } from './schemas/user.schema';
 
 const userServiceMock = {
     create: jest.fn(),
@@ -10,6 +12,10 @@ const userServiceMock = {
     findOne: jest.fn(),
     update: jest.fn(),
     remove: jest.fn(),
+    delete: jest.fn(),
+    displayDeletedUsers: jest.fn(),
+    disable2FA: jest.fn(),
+    enable2FA: jest.fn()
 };
 
 describe('UserController', () => {
@@ -18,7 +24,7 @@ describe('UserController', () => {
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
             controllers: [UserController],
-            providers: [UserService],
+            providers: [UserService, JwtService],
         })
             .overrideProvider(UserService)
             .useValue(userServiceMock)
@@ -92,4 +98,5 @@ describe('UserController', () => {
             expect(result).toBe(deletedUser);
         });
     });
+
 });

@@ -6,7 +6,6 @@ import {
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
-import { User } from '../../user/schemas/user.schema';
 
 @Injectable()
 export class UserGuard implements CanActivate {
@@ -22,13 +21,12 @@ export class UserGuard implements CanActivate {
       const payload = await this.jwtService.verifyAsync(token, {
         secret: process.env.JWT_SECRET,
       });
-
       if (payload.role !== 2) {
         throw new UnauthorizedException('Insufficient permissions');
       }
       request['user'] = payload;
-    } catch {
-      throw new UnauthorizedException();
+    } catch (e) {
+      throw new UnauthorizedException(e);
     }
     return true;
   }

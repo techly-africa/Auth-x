@@ -351,90 +351,94 @@ describe('RoleService', () => {
             await expect(roleService.assignPermissionToRole(roleId, permissionIds)).rejects.toThrow(InternalServerErrorException);
         });
     });
-    //     it('should find a role with its permissions', async () => {
-    //         const roleId = 'role-id';
+    describe('temporarilySuspendRole', () => {
+        it('should temporarily suspend a role', async () => {
+            const roleId = 'role-id';
 
-    //         const role = {
-    //             _id: roleId,
-    //             roleName: 'Admin',
-    //             description: 'Administrator Role',
-    //             permissions: ['perm-id-1', 'perm-id-2'],
-    //         };
+            const role = {
+                _id: roleId,
+                roleName: 'Admin',
+                description: 'Administrator Role',
+                isDeleted: false,
+                save: jest.fn(),
+            };
 
-    //         const permissions = [
-    //             { _id: 'perm-id-1', name: 'Permission 1', description: 'Desc 1' },
-    //             { _id: 'perm-id-2', name: 'Permission 2', description: 'Desc 2' },
-    //         ];
+            mockRolesModel.findById.mockReturnValue(role);
 
-    //         mockRolesModel.findById.mockReturnValue(role);
-    //         mockPermissionModel.find.mockReturnValue(permissions);
+            const result = await roleService.temporarilySuspendRole(roleId);
 
-    //         const result = await roleService.findRoleWithPermissions(roleId);
+            expect(result).toEqual({ message: 'Role Deleted Temporarily' });
+            expect(role.isDeleted).toBe(true);
+            expect(role.save).toHaveBeenCalled();
+        });
 
-    //         expect(result).toEqual({
-    //             _id: roleId,
-    //             roleName: 'Admin',
-    //             description: 'Administrator Role',
-    //             permissions,
-    //         });
-    //         expect(mockRolesModel.findById).toHaveBeenCalledWith(roleId);
-    //         expect(mockPermissionModel.find).toHaveBeenCalledWith({ _id: { $in: role.permissions } });
-    //     });
-    // });
+        it('should throw BadRequestException if role does not exist', async () => {
+            const roleId = 'non-existent-role-id';
 
-    // describe('unassignPermissionFromRole', () => {
-    //     it('should unassign a permission from a role', async () => {
-    //         const roleId = 'role-id';
-    //         const permissionId = 'perm-id-1';
+            mockRolesModel.findById.mockReturnValue(null);
 
-    //         const role = {
-    //             _id: roleId,
-    //             roleName: 'Admin',
-    //             description: 'Administrator Role',
-    //             permissions: ['perm-id-1', 'perm-id-2'],
-    //             save: jest.fn(),
-    //         };
+            await expect(roleService.temporarilySuspendRole(roleId)).rejects.toThrow(BadRequestException);
+        });
+    });
 
-    //         mockRolesModel.findById.mockReturnValue(role);
+    describe('displaySuspendedRoles', () => {
+        it('should return a list of suspended roles', async () => {
+            const suspendedRoles = [
+                { roleName: 'Admin', description: 'Administrator Role', isDeleted: true },
+                { roleName: 'User', description: 'User Role', isDeleted: true },
+            ];
 
-    //         const result = await roleService.unassignPermissionFromRole(roleId, permissionId);
+            mockRolesModel.find.mockReturnValue(suspendedRoles);
 
-    //         expect(result).toEqual({ message: 'Permission unassigned Successfully' });
-    //         expect(role.permissions).not.toContain(permissionId);
-    //         expect(role.save).toHaveBeenCalled();
-    //     });
+            const result = await roleService.displaySuspendendRoles();
 
-    //     it('should throw NotFoundException if permission is not assigned to role', async () => {
-    //         const roleId = 'role-id';
-    //         const permissionId = 'non-existent-perm-id';
+            expect(result).toEqual(suspendedRoles);
+            expect(mockRolesModel.find).toHaveBeenCalledWith({ isDeleted: true });
+        });
+    });
 
-    //         const role = {
-    //             _id: roleId,
-    //             roleName: 'Admin',
-    //             description: 'Administrator Role',
-    //             permissions: ['perm-id-1', 'perm-id-2'],
-    //         };
+    describe('restoreSuspendedRole', () => {
+        it('should restore a suspended role', async () => {
+            const roleId = 'role-id';
 
-    //         mockRolesModel.findById.mockReturnValue(role);
+            const role = {
+                _id: roleId,
+                roleName: 'Admin',
+                description: 'Administrator Role',
+                isDeleted: true,
+                save: jest.fn(),
+            };
 
-    //         await expect(roleService.unassignPermissionFromRole(roleId, permissionId)).rejects.toThrow(NotFoundException);
-    //     });
+            mockRolesModel.findById.mockReturnValue(role);
 
-    //     it('should throw InternalServerErrorException on error', async () => {
-    //         const roleId = 'role-id';
-    //         const permissionId = 'perm-id-1';
+            const result = await roleService.restoreSuspendedRole(roleId);
 
-    //         const role = {
-    //             _id: roleId,
-    //             roleName: 'Admin',
-    //             description: 'Administrator Role',
-    //             permissions: ['perm-id-1', 'perm-id-2'],
-    //             save: jest.fn().mockRejectedValue(new Error('Some error')),
-    //         };
+            expect(result).toEqual(role);
+            expect(role.isDeleted).toBe(false);
+            expect(role.save).toHaveBeenCalled();
+        });
 
-    //         mockRolesModel.findById.mockReturnValue(role);
+        it('should throw NotFoundException if role does not exist', async () => {
+            const roleId = 'non-existent-role-id';
 
-    //         await expect(roleService.unassignPermissionFromRole(roleId, permissionId)).rejects.toThrow(InternalServerErrorException);
-    //     });
-    // });
+            mockRolesModel.findById.mockReturnValue(null);
+
+            await expect(roleService.restoreSuspendedRole(roleId)).rejects.toThrow(NotFoundException);
+        });
+
+        it('should throw BadRequestException if role is not suspended', async () => {
+            const roleId = 'role-id';
+
+            const role = {
+                _id: roleId,
+                roleName: 'Admin',
+                description: 'Administrator Role',
+                isDeleted: false,
+            };
+
+            mockRolesModel.findById.mockReturnValue(role);
+
+            await expect(roleService.restoreSuspendedRole(roleId)).rejects.toThrow(BadRequestException);
+        });
+    });
 });
