@@ -1,8 +1,12 @@
 import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AppService {
+  constructor(private configService: ConfigService) {}
+
   getHello(): string {
-    return 'Welcome to MPACASH APIs!';
+    const appName = this.configService.get<string>('APP_NAME');
+    return `Welcome to ${appName} APIs!`;
   }
 }
